@@ -1,0 +1,14 @@
+BASE_LOCATION: ${user.dir}
+DB_NAME: blog
+
+
+server:
+  port: 8888
+
+
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3307/${DB_NAME}?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
