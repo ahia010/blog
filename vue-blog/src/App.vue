@@ -2,12 +2,13 @@
   <n-layout>
     <n-layout-header bordered class="nav">
       <div class="nav-left">
-        <div class="logo">
-          
-        </div>
+          <n-image width="35" :src="logo"/>
+          <n-gradient-text :size="30" type="success">
+            Ahia-Blog
+          </n-gradient-text>
         <n-menu class="home-menu" v-model:value="activeKey" mode="horizontal" :options="menuOptions" responsive/>
-
       </div>
+
       <div class="header-center">
         <n-input size="medium" round placeholder="搜索" class="header-input">
           <template #suffix>
@@ -23,12 +24,19 @@
     <n-layout-content>
       <router-view/>
     </n-layout-content>
-    <n-layout-footer>底部</n-layout-footer>
+    <n-layout-footer bordered style="padding: 25px 0">
+      <n-space justify="center">
+        <n-gradient-text :size="15" type="warning">
+          Powered by Vue 3 + Vite + Naive UI Author: ahia
+        </n-gradient-text>
+      </n-space>
+    </n-layout-footer>
   </n-layout>
 </template>
 <script setup>
 import {h, ref} from "vue";
 import {useRouter, useRoute} from "vue-router";
+import logo from "@/assets/logo.svg";
 
 const router = useRouter()
 
@@ -48,7 +56,7 @@ const menuOptions = [
     key: "/",
   },
   {
-    label: "寻羊冒险记",
+    label: "分类",
     key: "/kind",
   },
 ];
@@ -60,14 +68,14 @@ const menuOptions = [
   flex: 1;
 }
 .n-layout-header {
-  padding: 0 32px;
+  padding: 0 10vw;
   height: 64px;
   display: flex;
   align-items: center;
 }
 
 .nav-left {
-  margin-left: 50px;
+  gap: 10px;
   display: flex;
   align-items: center;
 
@@ -85,7 +93,9 @@ const menuOptions = [
 .nav-right {
   white-space: pre;
 }
-
+:deep(.n-menu) {
+  margin-left: 50px;
+}
 /**
 :deep(.n-menu) {
 
