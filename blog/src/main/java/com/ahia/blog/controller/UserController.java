@@ -1,6 +1,10 @@
 package com.ahia.blog.controller;
 
+import com.ahia.blog.entity.R;
+import com.ahia.blog.util.PasswordUtil;
+import com.ahia.blog.util.TokenUtil;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +17,7 @@ import com.ahia.blog.entity.User;
 import com.ahia.blog.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,6 +33,29 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("login")
+    public R login( User user) {
+        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+
+        User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()).eq("password", user.getPassword()));
+        if (user1 == null) {
+            return R.error("用户名或密码错误");
+        }
+        user1.setToken(TokenUtil.generateToken(user1.getUsername(), user1.getRole()));
+        return R.ok("登录成功", user1);
+    }
+
+    @PostMapping("register")
+    public R register(User user) {
+        User user1= userService.getOne(QueryWrapper.create().eq("username", user.getUsername()));
+        if (user1 != null) {
+            return R.error("用户名已存在");
+        }
+
+        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+        userService.save(user);
+        return R.ok("注册成功");
+    }
     /**
      * 添加。
      *
