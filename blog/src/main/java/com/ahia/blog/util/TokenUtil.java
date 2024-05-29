@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 
 public class TokenUtil {
-    @Value("${token.secretKey}")
-    private static final String SECRET_KEY = "";
+//    @Value("${token.secretKey}")
+    private static final String SECRET_KEY = "a@h*i-a1b2l$o!g";
 
-    @Value("${token.time}")
-    private static final int time = 0;
+//    @Value("${token.time}")
+    private static final int time = 86400000;
 
     public static String generateToken(String username,Integer role) {
         return Jwts.builder()

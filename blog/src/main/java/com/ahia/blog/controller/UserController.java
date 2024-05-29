@@ -35,11 +35,12 @@ public class UserController {
 
     @PostMapping("login")
     public R login( User user) {
-        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
-
-        User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()).eq("password", user.getPassword()));
-        if (user1 == null) {
-            return R.error("用户名或密码错误");
+        System.out.println(user+"====================");
+        System.out.println(PasswordUtil.verifyPassword("1",PasswordUtil.hashPassword("1")) );
+       System.out.println(PasswordUtil.hashPassword(user.getPassword())+"====================");
+        User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()));
+        if (user1 == null||!PasswordUtil.verifyPassword(user.getPassword(),user1.getPassword())) {
+            return R.error(401,"用户名或密码错误");
         }
         user1.setToken(TokenUtil.generateToken(user1.getUsername(), user1.getRole()));
         return R.ok("登录成功", user1);

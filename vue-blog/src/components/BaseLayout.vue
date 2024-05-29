@@ -4,7 +4,7 @@
   <n-layout>
     <n-layout-header bordered class="nav">
       <div class="nav-left">
-        <n-image width="35" :src="logo"/>
+        <n-image width="35" preview-disabled :src="logo"/>
         <n-gradient-text :size="30" type="success">
           Ahia-Blog
         </n-gradient-text>

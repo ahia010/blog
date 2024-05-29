@@ -1,9 +1,7 @@
 BASE_LOCATION: ${user.dir}
 DB_NAME: blog
 
-token:
-  secretKey: a@h*i-a1b2l$o!g
-  time: 86400000
+
 
 server:
   port: 8888

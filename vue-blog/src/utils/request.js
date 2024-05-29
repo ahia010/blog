@@ -1,7 +1,7 @@
 import {http}  from "@/utils/http.js";
 
 const URL = {
-    login: '/login',
+    login: '/user/login',
     register: '/register'
 }
 
@@ -11,15 +11,15 @@ const register = (params)=>{
     return http.request({
         url: URL.register,
         method: 'GET',
-        data:params
+        params:params
     })
 }
 
 const login = (params)=>{
     return http.request({
         url: URL.login,
-        method: 'GET',
-        data:params
+        method: 'POST',
+        params:params
     })
 }
 

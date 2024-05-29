@@ -42,6 +42,7 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import {useMessage} from 'naive-ui'
+import {login} from "@/utils/request.js";
 
 const loginForm = reactive({
   username: '',
@@ -51,6 +52,8 @@ const loginForm = reactive({
 let msgReactive = null;
 const message = useMessage();
 
+const isLogin = ref(false)
+
 function goLogin() {
   if (loginForm.username == "" || loginForm.password == "") {
     msgReactive = message.create("用户名和密码不能为空", {
@@ -58,17 +61,33 @@ function goLogin() {
       duration: 2000
     });
   } else {
-    if (!msgReactive) {
+    if (!isLogin.value) {
+      isLogin.value = true;
       msgReactive = message.create("登录中", {
         type: "loading",
         duration: 5000
       });
-      setTimeout(() => {
-        if (msgReactive) {
-          msgReactive.type = "success";
+      login(loginForm).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
           msgReactive.content = "登录成功";
+          msgReactive.type = "success";
+          isLogin.value = false;
+
+          // setTimeout(() => {
+          //   isLogin.value = false;
+          //   router.push("/admin");
+          // }, 2000)
+        } else {
+          msgReactive.content = res.data.msg;
+          msgReactive.type = "error";
+          isLogin.value = false;
         }
-      }, 2000)
+      }).catch(err => {
+        msgReactive.content = "登录失败";
+        msgReactive.type = "error";
+        isLogin.value = false;
+      })
     }
   }
 }

@@ -1,10 +1,11 @@
 <script setup>
 
+import AdminLayout from "@/components/AdminLayout.vue";
 </script>
 
 <template>
 <n-layout>
-  Dashboard
+  <AdminLayout/>
 </n-layout>
 </template>
 
