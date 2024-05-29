@@ -1,5 +1,6 @@
 package com.ahia.blog.controller;
 
+import com.ahia.blog.security.Authentication;
 import com.mybatisflex.core.paginate.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,6 +67,7 @@ public class CommentController {
      *
      * @return 所有数据
      */
+    @Authentication(role = {1})
     @GetMapping("list")
     public List<Comment> list() {
         return commentService.list();
