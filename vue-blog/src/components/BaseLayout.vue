@@ -8,14 +8,14 @@
         <n-gradient-text :size="30" type="success">
           Ahia-Blog
         </n-gradient-text>
-        <n-menu class="home-menu" v-model:value="activeKey" mode="horizontal" :options="menuOptions" responsive/>
+        <n-menu   v-model:value="activeKey" mode="horizontal" :options="menuOptions" responsive/>
       </div>
 
       <div class="header-center">
         <n-input size="medium" round placeholder="搜索" class="header-input">
-          <template #suffix>
-            <!--          <n-icon :component="FlashOutline" />-->
-          </template>
+<!--          <template #suffix>-->
+<!--                      <n-icon :component="FlashOutline" />-->
+<!--          </template>-->
         </n-input>
       </div>
       <div class="nav-right">
@@ -40,7 +40,7 @@
 
 <script setup>
 import {h, ref} from "vue";
-import {useRouter, useRoute} from "vue-router";
+import {useRouter, useRoute,RouterLink} from "vue-router";
 import logo from "@/assets/logo.svg";
 
 const router = useRouter()
@@ -52,19 +52,31 @@ const activeKey = ref(route.path)
 const menuOptions = [
   {
     label: () => h(
-        "router-link",
+        RouterLink,
         {
-          href: "/",
+          to:{
+            name: "home"
+          }
         },
-        "首页"
+        { default: () => "首页" }
     ),
     key: "/",
   },
   {
-    label: "分类",
-    key: "/kind",
+    label: () => h(
+        RouterLink,
+        {
+          to:{
+            name: "list"
+          }
+        },
+        { default: () => "分类" }
+    ),
+    key: "/list",
   },
 ];
+
+
 </script>
 
 

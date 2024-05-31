@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" >
     <div class="login-box">
       <n-card style="width: 100%;height: 100%">
         <n-flex justify="center" align="center" style="margin-bottom: 50px;">
@@ -26,7 +26,7 @@
             <n-button block>注册</n-button>
           </n-form-item>
         </n-form>
-        <n-flex justify="end">
+        <n-flex justify="end" style="padding: 10px">
           <n-button :bordered="false" size="large" text>忘记密码？</n-button>
         </n-flex>
         <n-divider>
@@ -40,9 +40,13 @@
   </div>
 </template>
 <script setup>
-import {reactive, ref} from 'vue'
+import {onMounted, reactive, ref} from 'vue'
 import {useMessage} from 'naive-ui'
 import {login} from "@/utils/request.js";
+import {userStore} from "@/stores/user.js";
+
+
+const user= userStore();
 
 const loginForm = reactive({
   username: '',
@@ -54,7 +58,7 @@ const message = useMessage();
 
 const isLogin = ref(false)
 
-function goLogin() {
+async function goLogin() {
   if (loginForm.username == "" || loginForm.password == "") {
     msgReactive = message.create("用户名和密码不能为空", {
       type: "error",
@@ -67,33 +71,33 @@ function goLogin() {
         type: "loading",
         duration: 5000
       });
-      login(loginForm).then(res => {
-        console.log(res)
-        if (res.data.code === 200) {
+      await login(loginForm).then(res => {
+        if (res.data.code == 200) {
+
           msgReactive.content = "登录成功";
           msgReactive.type = "success";
-          isLogin.value = false;
 
-          // setTimeout(() => {
-          //   isLogin.value = false;
-          //   router.push("/admin");
-          // }, 2000)
+          user.setUserInfo(res.data.data);
+          console.log(1111)
+          console.log(user.getUserInfo())
         } else {
           msgReactive.content = res.data.msg;
           msgReactive.type = "error";
-          isLogin.value = false;
         }
-      }).catch(err => {
-        msgReactive.content = "登录失败";
-        msgReactive.type = "error";
         isLogin.value = false;
+      }).catch(err => {
+        console.log(err);
       })
+      isLogin.value = false;
     }
   }
 }
 
+
 </script>
+
 <style scoped lang="scss">
+
 .login-box {
   width: 600px;
 
@@ -105,5 +109,7 @@ function goLogin() {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(
+          144deg,#af40ff,#5b42f3 50%,#00ddeb);
 }
 </style>

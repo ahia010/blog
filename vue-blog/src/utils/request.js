@@ -7,7 +7,7 @@ const URL = {
 
 
 
-const register = (params)=>{
+const register = async (params)=>{
     return http.request({
         url: URL.register,
         method: 'GET',
@@ -15,7 +15,7 @@ const register = (params)=>{
     })
 }
 
-const login = (params)=>{
+const login = async (params)=>{
     return http.request({
         url: URL.login,
         method: 'POST',

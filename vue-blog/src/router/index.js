@@ -1,16 +1,28 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Dashboard from "@/views/admin/Dashboard.vue";
-import UserAdmin from "@/views/admin/UserAdmin.vue";
+import List from "@/views/List.vue";
+import Mine from "@/views/Mine.vue";
+import UserList from "@/views/admin/UserList.vue";
+import PageList from "@/views/admin/PageList.vue";
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
             name: 'home',
             component: Home
+        },
+        {
+            path: '/list',
+            name: 'list',
+            component: List
+        }, {
+            path: '/mine',
+            name: 'mine',
+            component: Mine
         },
         {
             path: '/login',
@@ -27,7 +39,11 @@ const router = createRouter({
                 }, {
                     path: 'user',
                     name: 'admin-user',
-                    component: UserAdmin
+                    component: UserList
+                }, {
+                    path: 'page',
+                    name: 'page',
+                    component: PageList
                 }
             ]
         }
