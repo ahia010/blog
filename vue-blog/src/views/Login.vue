@@ -28,7 +28,7 @@
         </n-form>
         <n-flex justify="end" style="padding: 10px">
           <n-button :bordered="false" size="large" text>忘记密码？</n-button>
-        </n-flex>
+        </n-flex>--
         <n-divider>
           第三方登录
         </n-divider>

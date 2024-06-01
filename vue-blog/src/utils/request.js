@@ -2,7 +2,8 @@ import {http}  from "@/utils/http.js";
 
 const URL = {
     login: '/user/login',
-    register: '/register'
+    register: '/register',
+    postList:'/post/list',
 }
 
 
@@ -23,4 +24,11 @@ const login = async (params)=>{
     })
 }
 
+const getPostList = async (params)=> {
+    return http.request({
+        url: URL.postList,
+        method: 'POST',
+        params: params
+    })
+}
 export {login,register};

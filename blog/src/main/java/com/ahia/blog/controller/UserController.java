@@ -6,6 +6,7 @@ import com.ahia.blog.util.PasswordUtil;
 import com.ahia.blog.util.TokenUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +18,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ahia.blog.entity.User;
 import com.ahia.blog.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
 
 /**
  * 控制层。
@@ -51,9 +59,16 @@ public class UserController {
         if (user1 != null) {
             return R.error("用户名已存在");
         }
+        userService.save(User.builder()
+                .username(user.getUsername())
+                .password(PasswordUtil.hashPassword(user.getPassword()))
+                .avatar("/avatar/default.jpg")
+                .role(1)
+                .status(1)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .build());
 
-        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
-        userService.save(user);
         return R.ok("注册成功");
     }
 
@@ -63,10 +78,40 @@ public class UserController {
      * @param user
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
-    @Authentication(role = {2})
-    @PostMapping("save")
-    public boolean save(@RequestBody User user) {
-        return userService.save(user);
+    @Authentication(role = {1})
+    @PostMapping("update")
+    public R update(User user) {
+        if (TokenUtil.extractUsername(user.getToken()).equals(user.getUsername())) {
+            if (user.getPassword() != null && user.getNewPassword() != null) {
+                User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()));
+                if (user1 == null || !PasswordUtil.verifyPassword(user.getPassword(), user1.getPassword())) {
+                    return R.error(401, "密码错误");
+                }
+                UpdateChain.of(User.class)
+                        .set("password", PasswordUtil.hashPassword(user.getNewPassword()))
+                        .set("updateTime", LocalDateTime.now())
+                        .update();
+                return R.ok("修改成功");
+            }
+            if (user.getFile() != null) {
+                UpdateChain.of(User.class)
+                        .set("avatar", saveAvatar(user.getFile()))
+                        .set("updateTime", LocalDateTime.now())
+                        .where("username", user.getUsername())
+                        .update();
+                return R.ok("修改成功");
+            }
+            UpdateChain.of(User.class)
+                    .set("email", user.getEmail())
+                    .set("phone", user.getPhone())
+                    .set("updateTime", LocalDateTime.now())
+                    .where("username", user.getUsername())
+                    .update();
+            return R.ok("修改成功");
+
+
+        }
+        return R.error("系统错误");
     }
 
     /**
@@ -88,8 +133,8 @@ public class UserController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @Authentication(role = {2})
-    @PutMapping("update")
-    public boolean update(@RequestBody User user) {
+    @PutMapping("save")
+    public boolean save(@RequestBody User user) {
         return userService.updateById(user);
     }
 
@@ -128,5 +173,19 @@ public class UserController {
         return userService.page(page);
     }
 
+    private String saveAvatar(MultipartFile files) {
+        try {
+            byte[] bytes = files.getBytes();
+            String originalFilename = files.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+            String newFilename = UUID.randomUUID() + extension;
+            Path path = Paths.get("./upload/avatar/" + newFilename);
+            Files.write(path, bytes);
+            return "/avatar/" + newFilename;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

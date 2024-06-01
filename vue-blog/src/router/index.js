@@ -5,7 +5,10 @@ import Dashboard from "@/views/admin/Dashboard.vue";
 import List from "@/views/List.vue";
 import Mine from "@/views/Mine.vue";
 import UserList from "@/views/admin/UserList.vue";
-import PageList from "@/views/admin/PageList.vue";
+import Detail from "@/views/Detail.vue";
+import Admin from "@/views/admin/Admin.vue";
+import PostList from "@/views/admin/PostList.vue";
+import PostDetail from "@/views/admin/PostDetail.vue";
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -16,6 +19,12 @@ const router = createRouter({
             component: Home
         },
         {
+            path: '/detail/:id',
+            name: 'detail',
+            component: Detail
+        },
+
+        {
             path: '/list',
             name: 'list',
             component: List
@@ -23,6 +32,10 @@ const router = createRouter({
             path: '/mine',
             name: 'mine',
             component: Mine
+        }, {
+            path: '/register',
+            name: 'register',
+            component: Login
         },
         {
             path: '/login',
@@ -31,9 +44,10 @@ const router = createRouter({
         }, {
             path: '/admin',
             name: 'admin',
+            component:Admin,
             children: [
                 {
-                    path: 'dashboard',
+                    path: '',
                     name: 'dashboard',
                     component: Dashboard
                 }, {
@@ -41,9 +55,13 @@ const router = createRouter({
                     name: 'admin-user',
                     component: UserList
                 }, {
-                    path: 'page',
-                    name: 'page',
-                    component: PageList
+                    path: 'post',
+                    name: 'post',
+                    component: PostList
+                },{
+                    path:'postDetail',
+                    name:'postDetail',
+                    component:PostDetail
                 }
             ]
         }

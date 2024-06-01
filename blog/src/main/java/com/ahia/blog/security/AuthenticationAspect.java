@@ -21,8 +21,8 @@ public class AuthenticationAspect {
     @Around("@annotation(Authentication)")
     public Object checkPermissions(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String token = request.getHeader("Token"); // 从请求头中获取token
-        if (token != null) {
+        String token = request.getHeader("Token"); // 从请求头中获取token;
+        if (token != null&&TokenUtil.isTokenExpired(token)) {
 //            System.out.println("token: " + token);
             Integer userRole = TokenUtil.extractRole(token);
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();

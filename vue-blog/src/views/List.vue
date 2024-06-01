@@ -3,7 +3,9 @@
 <template>
   <base-layout>
     <template #default>
-      List
+      <n-layout content-style="padding:20px 10vw">
+        List
+      </n-layout>
     </template>
   </base-layout>
 </template>

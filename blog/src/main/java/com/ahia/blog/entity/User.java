@@ -40,8 +40,16 @@ public class User implements Serializable {
     @JsonIgnore
     private String password;
 
+    @JsonIgnore
+    @Column(ignore = true)
+    private String newPassword;
+
 
     private String avatar;
+
+    private String email;
+
+    private String phone;
 
     @Column(ignore = true)
     private MultipartFile file;
@@ -51,7 +59,7 @@ public class User implements Serializable {
      */
     private Integer role;
 
-    private String status;
+    private Integer status;
 
     @Column(ignore = true)
     private String token;

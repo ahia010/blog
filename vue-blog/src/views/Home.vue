@@ -7,218 +7,46 @@
             <n-grid-item :span="18">
               <n-card>
                 <n-list hoverable clickable>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王
-                      开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的
-                      孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光
-                      停滞的海浪
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            暑夜
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            晚春
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      奋勇呀然后休息呀<br>
-                      完成你伟大的人生
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item>
-                    <n-thing title="他在时间门外" content-style="margin-top: 10px;">
-                      <template #description>
-                        <n-space size="small" style="margin-top: 4px">
-                          <n-tag :bordered="false" type="info" size="small">
-                            环形公路
-                          </n-tag>
-                          <n-tag :bordered="false" type="info" size="small">
-                            潜水艇司机
-                          </n-tag>
-                        </n-space>
-                      </template>
-                      最新的打印机<br>
-                      复制着彩色傀儡<br>
-                      早上好我的罐头先生<br>
-                      让他带你去被工厂敲击
-                    </n-thing>
-                  </n-list-item>
+                  <template v-for="item in homeList">
+                    <n-list-item @click="goDetail(item.id)">
+                      <n-thing :title="item.title" :content-style="{marginTop: '10px'}">
+                        <template #description>
+                          <n-space size="small" style="margin-top: 4px">
+                            <template v-for="kind in item.kind">
+                              <n-tag :bordered="false" type="info" size="small">
+                                {{ kind }}
+                              </n-tag>
+                            </template>
+                            <!--                            <n-tag :bordered="false" type="info" size="small">-->
+                            <!--                              java-->
+                            <!--                            </n-tag>-->
+                            <!--                            <n-tag :bordered="false" type="info" size="small">-->
+                            <!--                              vue-->
+                            <!--                            </n-tag>-->
+                          </n-space>
+                        </template>
+                        {{ item.content }}
+                      </n-thing>
+                    </n-list-item>
+                  </template>
+
+                  <!--                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">-->
+                  <!--                      <template #description>-->
+                  <!--                        <n-space size="small" style="margin-top: 4px">-->
+                  <!--                          <n-tag :bordered="false" type="info" size="small">-->
+                  <!--                            java-->
+                  <!--                          </n-tag>-->
+                  <!--                          <n-tag :bordered="false" type="info" size="small">-->
+                  <!--                            vue-->
+                  <!--                          </n-tag>-->
+                  <!--                        </n-space>-->
+                  <!--                      </template>-->
+                  <!--                      奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王-->
+                  <!--                      开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的-->
+                  <!--                      孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光-->
+                  <!--                      停滞的海浪-->
+                  <!--                    </n-thing>-->
+
                 </n-list>
               </n-card>
             </n-grid-item>
@@ -250,47 +78,15 @@
               <n-card style="margin-top:20px">
                 <n-text>浏览排行</n-text>
                 <n-list hoverable clickable>
-
-                  <n-list-item class="home-top">
-                    <n-thing title="文章标题" content-style="margin-top: 10px;"  >
-                      <div  class="home-top-content" :style="{maxWidth:topMaxWidth}">
-                        住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王
-                        开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的
-                        孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光
-                        停滞的海浪
+                  <template v-for="item in viewRankingList">
+                  <n-list-item class="home-top" @click="goDetail(item.id)">
+                    <n-thing :title="item.title" content-style="margin-top: 10px;">
+                      <div class="home-top-content" :style="{maxWidth:topMaxWidth}">
+                        {{item.content}}
                       </div>
                     </n-thing>
                   </n-list-item>
-                  <n-list-item class="home-top">
-                    <n-thing title="文章标题" content-style="margin-top: 10px;"  >
-                      <div  class="home-top-content" :style="{maxWidth:topMaxWidth}">
-                        住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王
-                        开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的
-                        孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光
-                        停滞的海浪
-                      </div>
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item class="home-top">
-                    <n-thing title="文章标题" content-style="margin-top: 10px;"  >
-                      <div  class="home-top-content" :style="{maxWidth:topMaxWidth}">
-                        住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王
-                        开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的
-                        孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光
-                        停滞的海浪
-                      </div>
-                    </n-thing>
-                  </n-list-item>
-                  <n-list-item class="home-top">
-                    <n-thing title="文章标题" content-style="margin-top: 10px;"  >
-                      <div  class="home-top-content" :style="{maxWidth:topMaxWidth}">
-                        住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王
-                        开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的
-                        孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光
-                        停滞的海浪
-                      </div>
-                    </n-thing>
-                  </n-list-item>
+                  </template>
 
 
                 </n-list>
@@ -305,21 +101,58 @@
 </template>
 
 <script setup>
-
+import {useRoute, useRouter} from "vue-router";
 import {getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {debounce} from "@/utils/debonce.js";
 import BaseLayout from "@/components/BaseLayout.vue";
 
+
+const router = useRouter();
+const route = useRoute();
 const topMaxWidth = ref("");
 
-const homeList = reactive([])
+
+const homeList = reactive(Array.from({length: 10}, () => ({
+  id: '1',
+  title: "相见恨晚",
+  content: "奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪",
+  kind: ["java", "vue"]
+})));
+
+const viewRankingList = reactive(Array.from({length:5 },()=>({
+  id:'1',
+  title:'文章标题',
+  content:'住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪\n' +
+      '                        痛苦之王\n' +
+      '                        开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的\n' +
+      '                        孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦\n' +
+      '                        深海的光\n' +
+      '                        停滞的海浪'
+})))
+
+function goDetail(id) {
+  router.push({
+    name: "detail",
+    params: {
+      id: id
+    }
+  })
+}
+
+// const homeList = reactive([{
+//   title: "相见恨晚",
+//   content: "奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪",
+//   kind: ["java", "vue"]
+// }
+// ]);
+
 
 const screenWidth = ref(window.innerWidth);
 
-onMounted(()=>{
+onMounted(() => {
   const width = document.querySelector('.home-top').clientWidth;
   // document.querySelector('.home-top-content').style.maxWidth = `${width-30}px`;
-  topMaxWidth.value=width-30+"px";
+  topMaxWidth.value = width - 30 + "px";
 
 })
 
@@ -330,7 +163,7 @@ const handleResize = debounce(() => {
   // 这里可以添加其他响应屏幕尺寸变化的逻辑
   const width = document.querySelector('.home-top').clientWidth;
   // document.querySelector('.home-top-content').style.maxWidth = `${width-30}px`;
-  topMaxWidth.value=width-30+"px";
+  topMaxWidth.value = width - 30 + "px";
 
 }, 200); // 200毫秒内如果有新的resize事件，之前的调用会被取消，仅执行最后一次
 
@@ -345,8 +178,6 @@ onBeforeUnmount(() => {
 });
 
 
-
-
 </script>
 
 <style scoped>
@@ -356,7 +187,8 @@ onBeforeUnmount(() => {
   height: 400px;
   object-fit: cover;
 }
-.home-top-content{
+
+.home-top-content {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

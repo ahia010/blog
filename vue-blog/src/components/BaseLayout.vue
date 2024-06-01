@@ -4,8 +4,8 @@
   <n-layout>
     <n-layout-header bordered class="nav">
       <div class="nav-left">
-        <n-image width="35" preview-disabled :src="logo"/>
-        <n-gradient-text :size="30" type="success">
+        <n-image width="35" preview-disabled :src="logo" @click="goHome()"/>
+        <n-gradient-text :size="30" type="success"  @click="goHome()">
           Ahia-Blog
         </n-gradient-text>
         <n-menu   v-model:value="activeKey" mode="horizontal" :options="menuOptions" responsive/>
@@ -19,22 +19,15 @@
         </n-input>
       </div>
       <div class="nav-right">
-        <n-button type="text">登录</n-button>
-        <n-button type="text">注册</n-button>
+        <n-button type="text" @click="goLogin()">登录</n-button>
+        <n-button type="text" @click="goReg()">注册</n-button>
       </div>
     </n-layout-header>
     <n-layout-content>
       <slot name="default">
-
       </slot>
     </n-layout-content>
-    <n-layout-footer bordered style="padding: 25px 0">
-      <n-space justify="center">
-        <n-gradient-text :size="15" type="warning">
-          Powered by Vue 3 + Vite + Naive UI Author: ahia
-        </n-gradient-text>
-      </n-space>
-    </n-layout-footer>
+    <BaseFooter/>
   </n-layout>
 </template>
 
@@ -42,12 +35,30 @@
 import {h, ref} from "vue";
 import {useRouter, useRoute,RouterLink} from "vue-router";
 import logo from "@/assets/logo.svg";
+import BaseFooter from "@/components/BaseFooter.vue";
 
 const router = useRouter()
 
 const route = useRoute()
 
 const activeKey = ref(route.path)
+
+
+const goLogin = () => {
+  router.push({
+    name: "login"
+  })
+}
+const goReg = () => {
+  router.push({
+    name: "register"
+  })
+}
+const goHome = () => {
+  router.push({
+    name: "home"
+  })
+}
 
 const menuOptions = [
   {
