@@ -1,22 +1,28 @@
 package com.ahia.blog.controller;
 
+import com.ahia.blog.entity.R;
+import com.ahia.blog.entity.User;
+import com.ahia.blog.security.Authentication;
+import com.ahia.blog.util.TokenUtil;
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.mybatisflex.core.query.QueryChain;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
+import com.mybatisflex.core.update.UpdateWrapper;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ahia.blog.entity.Post;
 import com.ahia.blog.service.PostService;
-import org.springframework.web.bind.annotation.RestController;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.ahia.blog.entity.table.PostTableDef.POST;
+import static com.ahia.blog.entity.table.UserTableDef.USER;
+
 /**
- *  控制层。
+ * 控制层。
  *
  * @author ahia
  * @since 2024-05-11
@@ -31,12 +37,30 @@ public class PostController {
     /**
      * 添加。
      *
-     * @param post 
+     * @param post
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
+    @Authentication(role = {2})
     @PostMapping("save")
-    public boolean save(@RequestBody Post post) {
-        return postService.save(post);
+    public R save(@RequestHeader(name = "Token", defaultValue = "") String token, Post post) {
+        String username = TokenUtil.extractUsername(token);
+        if (post.getTitle() == null || post.getContent() == null) {
+            return R.error("标题和内容不能为空");
+        }
+        Post newPost = Post.builder()
+                .title(post.getTitle())
+                .kind(post.getKind())
+                .content(post.getContent())
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .build();
+
+        postService.save(UpdateWrapper.of(newPost)
+                .setRaw(Post::getUserId, "(SELECT id FROM user WHERE username = '" + username + "')")
+                .toEntity());
+
+
+        return R.ok("添加成功");
     }
 
     /**
@@ -53,7 +77,7 @@ public class PostController {
     /**
      * 根据主键更新。
      *
-     * @param post 
+     * @param post
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
@@ -78,8 +102,19 @@ public class PostController {
      * @return 详情
      */
     @GetMapping("getInfo/{id}")
-    public Post getInfo(@PathVariable Serializable id) {
-        return postService.getById(id);
+    public R getInfo(@PathVariable Serializable id) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(POST.ALL_COLUMNS, USER.USERNAME)
+                .from(POST)
+                .innerJoin(USER).on(POST.USER_ID.eq(USER.ID))
+                .where(POST.ID.eq(id));
+//        QueryChain.of(Post.class)
+//                .select(POST.ALL_COLUMNS, USER.USERNAME)
+//                .from(POST)
+//                .innerJoin(USER).on(POST.USER_ID.eq(USER.ID))
+//                .where(POST.ID.eq(id))
+
+        return R.ok("获取成功",postService.getOne(queryWrapper));
     }
 
     /**
@@ -89,8 +124,8 @@ public class PostController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public Page<Post> page(Page<Post> page) {
-        return postService.page(page);
+    public R page(Page<Post> page) {
+        return R.ok("获取成功", postService.page(page));
     }
 
 }

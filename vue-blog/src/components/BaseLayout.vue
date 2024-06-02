@@ -18,10 +18,16 @@
 <!--          </template>-->
         </n-input>
       </div>
-      <div class="nav-right">
+      <div class="nav-right" v-if="user.userInfo.token===''">
         <n-button type="text" @click="goLogin()">登录</n-button>
         <n-button type="text" @click="goReg()">注册</n-button>
       </div>
+      <div class="nav-right" v-else>
+        <n-dropdown trigger="hover" :options="options"  @select="handleSelect">
+          <n-image :src="avatar" preview-disabled  width="50"></n-image>
+        </n-dropdown>
+      </div>
+
     </n-layout-header>
     <n-layout-content>
       <slot name="default">
@@ -32,10 +38,16 @@
 </template>
 
 <script setup>
-import {h, ref} from "vue";
+import {h, onMounted, ref} from "vue";
 import {useRouter, useRoute,RouterLink} from "vue-router";
 import logo from "@/assets/logo.svg";
 import BaseFooter from "@/components/BaseFooter.vue";
+import {userStore} from "@/stores/user.js";
+import {useMessage} from "naive-ui";
+
+const message = useMessage();
+
+const user = userStore()
 
 const router = useRouter()
 
@@ -43,6 +55,63 @@ const route = useRoute()
 
 const activeKey = ref(route.path)
 
+const options =ref([
+  {
+    label: "你好,用户",
+    key: "username",
+    disabled: true
+  },
+  {
+    label: "个人中心",
+    key: "mine"
+  },
+  {
+    label: "设置",
+    key: "setting"
+  },
+  {
+    label: "前往管理员后台",
+    key: "admin",
+    show: user.userInfo.role === 2
+  },
+  {
+    label: "退出登录",
+    key: "logout"
+  }
+])
+onMounted(() => {
+  options.value[0].label = "你好:"+user.userInfo.username
+})
+
+const userInfo = userStore().getUserInfo()
+
+const avatar = userInfo.avatar ? userInfo.avatar : "api/avatar/default.jpg"
+
+
+function handleSelect(key) {
+  if (key === "logout") {
+    userStore().logout()
+    message.success("退出登录成功")
+    router.push({
+      name: "home"
+    })
+  }
+  if (key === "mine") {
+    // router.push({
+    //   name: "mine"
+    // })
+  }
+  if (key === "setting") {
+    // router.push({
+    //   name: "setting"
+    // })
+  }
+  if (key === "admin") {
+    router.push({
+      name: "dashboard"
+    })
+  }
+}
 
 const goLogin = () => {
   router.push({

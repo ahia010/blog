@@ -1,5 +1,7 @@
 package com.ahia.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
@@ -33,12 +35,20 @@ public class Post implements Serializable {
 
     private Integer userId;
 
+    @Column(ignore = true)
+    private String username;
+
+    private String kind;
+
     private String title;
 
     private String content;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
 }

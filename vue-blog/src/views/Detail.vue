@@ -5,7 +5,7 @@
         <n-card>
           <n-flex justify="start" style="font-weight: bold;font-size: 40px">我是文章标题</n-flex>
           <n-layout content-style="padding:20px">
-            {{page.author}} {{page.time}} <n-tag>{{page.kind}}</n-tag>
+            {{page.username}} {{page.createTime}} <n-tag>{{page.kind}}</n-tag>
             <n-divider />
           </n-layout>
           <n-layout  v-html="page.content"></n-layout>
@@ -19,15 +19,18 @@
 
 import BaseLayout from "@/components/BaseLayout.vue";
 import {useRoute, useRouter} from "vue-router";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
+import {getPostDetail} from "@/utils/request.js";
 
 const route = useRoute();
 
 const id = ref(route.params.id);
 
-const page = reactive({
+
+
+const page = ref({
   title: "文章标题",
-  author: "作者",
+  username: "作者",
   time: "2021-10-10",
   kind: "分类",
   content: "<div>\n" +
@@ -44,6 +47,16 @@ const page = reactive({
       "    <img src=\"https://example.com/path_to_your_image.jpg\" alt=\"公司图片\" style=\"width:100%; height:auto;\">\n" +
       "</div>"
 });
+
+onMounted(async ()=>{
+  await getPostDetail(route.params.id).then(res=>{
+    if (res.data.code !== 200) {
+      router.push({path: '/404'})
+    } else {
+      page.value = res.data.data
+    }
+  })
+})
 
 
 </script>

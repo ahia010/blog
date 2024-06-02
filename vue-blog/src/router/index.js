@@ -62,6 +62,10 @@ const router = createRouter({
                     path:'postDetail',
                     name:'postDetail',
                     component:PostDetail
+                },{
+                    path:'postAdd',
+                    name:'postAdd',
+                    component:PostDetail
                 }
             ]
         }

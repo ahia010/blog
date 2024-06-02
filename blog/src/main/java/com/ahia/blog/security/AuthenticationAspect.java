@@ -22,8 +22,9 @@ public class AuthenticationAspect {
     public Object checkPermissions(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("Token"); // 从请求头中获取token;
-        if (token != null&&TokenUtil.isTokenExpired(token)) {
-//            System.out.println("token: " + token);
+//        System.out.println("token: " + token);
+        if (token != null&&!TokenUtil.isTokenExpired(token)) {
+//            System.out.println("token222: " + token);
             Integer userRole = TokenUtil.extractRole(token);
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Authentication annotation = signature.getMethod().getAnnotation(Authentication.class);
@@ -36,7 +37,7 @@ public class AuthenticationAspect {
                 }
             }
         }
-        R errorResponse = R.error(403, "用户身份过期，请重新登录");
+        R errorResponse = R.error(408, "用户身份过期，请重新登录");
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         response.setCharacterEncoding("UTF-8"); // 设置字符编码为UTF-8
         response.setContentType("application/json;charset=UTF-8"); // 设置响应类型和字符编码

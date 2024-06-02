@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 public class ImgController {
@@ -47,7 +44,7 @@ public class ImgController {
         return R.ok("上传成功",list);
     }
     @PostMapping("/upload/img")
-    public R upload(@RequestParam("file") MultipartFile file){
+    public R upload(MultipartFile file){
         try {
             byte[] bytes = file.getBytes();
             String originalFilename = file.getOriginalFilename();
@@ -55,12 +52,13 @@ public class ImgController {
             String newFilename = UUID.randomUUID() + extension;
             Path path = Paths.get(UPLOADED_FOLDER+"img/" + newFilename);
             Files.write(path, bytes);
+            Map<String, String> data = new HashMap<>();
+            data.put("url", "/api/img/" + newFilename);
+            return R.ok("上传成功",data).put("errno",0);
         }catch(IOException e) {
-            return R.error("上传失败");
             e.printStackTrace();
+            return R.error("上传失败");
         }
-        return R.ok("上传成功",new HashMap<>().put());
-
     }
 
     @GetMapping("/img/{filename:.+}")

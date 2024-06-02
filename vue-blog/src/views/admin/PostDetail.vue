@@ -4,11 +4,9 @@
       :model="model"
       label-placement="left"
       label-width="auto"
-      :style="{
-      maxWidth: '1000px'
-      }"
+      :style="{maxWidth: '1000px'}"
   >
-    <n-form-item path="title" label="标题">
+    <n-form-item path="title" label="标题" size="large">
       <n-input v-model:value="model.title"/>
     </n-form-item>
     <n-form-item path="kind" label="类型">
@@ -33,6 +31,10 @@
       />
     </div>
   </n-flex>
+  <n-space style="padding: 20px">
+    <n-button type="primary" @click="submit">提交</n-button>
+    <n-button @click="cancel">取消</n-button>
+  </n-space>
 
 </template>
 
@@ -41,18 +43,66 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, ref, shallowRef, onMounted, reactive} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {useMessage} from "naive-ui";
+import {userStore} from "@/stores/user.js";
+import {useRouter,useRoute} from "vue-router";
+import {addPost} from "@/utils/request.js";
+const router = useRouter();
+const route = useRoute();
+
+const user = userStore();
+
+async function submit() {
+  if (!model.title || !model.kind || !valueHtml.value) {
+    message.error('填写内容不能为空');
+    return;
+  }
+  if (route.path==='/admin/postDetail') {
+    message.success('提交成功')
+  } else {
+    let headers = {
+      'Content-Type': 'application/json',
+      'Token': user.userInfo.token
+    }
+
+    model.content = valueHtml.value
+    await addPost(model,headers).then(res=>{
+      if (res.data.code===200) {
+        message.success('新增成功')
+        // router.go(-1)
+      } else if (res.data.code===401) {
+        message.error('登录过期，请重新登录')
+        router.push('/login')
+        user.logout()
+      }else
+       {
+        message.error(res.data.msg)
+      }
+    }).catch(err=>{
+      console.log(err)
+    })
+    // message.success('新增成功')
+  }
+}
+
+function cancel() {
+  valueHtml.value = ''
+  model.title = ''
+  model.kind = ''
+  router.go(-1)
+}
+
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
 
 // 内容 HTML
-const valueHtml = ref('<p>hello</p>')
+const valueHtml = ref('<p>hello，在这里输入内容哦</p>')
 
 // 模拟 ajax 异步获取内容
-onMounted(() => {
-  setTimeout(() => {
-    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-  }, 1500)
-})
+// onMounted(() => {
+//   setTimeout(() => {
+//     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
+//   }, 1500)
+// })
 
 const mode = ref('default')
 
@@ -61,8 +111,12 @@ const editorConfig = {
   placeholder: '请输入内容...',
   MENU_CONF: {
     uploadImage: {
-      server: 'api/img/upload',
+      server: 'api/upload/img',
       fieldName: 'file',
+      headers: {
+        Token: user.userInfo.token,
+      },
+      withCredentials: true,
     },
   },
 }
@@ -81,8 +135,9 @@ const handleCreated = (editor) => {
 const formRef = ref(null);
 const message = useMessage();
 const model = reactive({
-  title: null,
-  kind: null
+  title: "",
+  kind: "",
+  content: valueHtml.value,
 });
 
 

@@ -7,13 +7,16 @@
           Ahia-Blog
         </n-gradient-text>
       </n-flex>
-      <n-menu :options="menuOptions" v-model:value="activeKey" />
+      <n-divider/>
+      <n-menu :options="menuOptions" v-model:value="activeKey"/>
     </n-layout-sider>
     <n-layout>
-      <n-layout-header style="padding: 24px" bordered>
-        <n-flex justify="space-between">
-          <div>11</div>
-          <div>22</div>
+      <n-layout-header style="padding: 10px 30px 10px 10px" bordered>
+        <n-flex justify="space-between" align="center">
+          <div>面包屑</div>
+          <n-dropdown trigger="hover" :options="options" @select="handleSelect">
+            <n-image :src="avatar" preview-disabled width="50"></n-image>
+          </n-dropdown>
         </n-flex>
       </n-layout-header>
       <n-layout-content content-style="padding: 24px;minHeight: 85vh;" style="">
@@ -28,8 +31,65 @@
 import logo from "@/assets/logo.svg";
 import BaseFooter from "@/components/BaseFooter.vue";
 import {useRouter, useRoute, RouterLink} from "vue-router";
-import {h, ref} from "vue";
+import {h, onMounted, ref} from "vue";
+import {userStore} from "@/stores/user.js";
+import {useMessage} from "naive-ui";
 
+const message = useMessage();
+
+const userInfo = userStore().getUserInfo()
+
+const options = ref([
+  {
+    label: "你好,管理员",
+    key: "username",
+    disabled: true
+  },
+  {
+    label: "个人中心",
+    key: "mine"
+  },
+  {
+    label: "设置设置设置设置设置设置设置",
+    key: "setting"
+  },
+  {
+    label: "前往主页",
+    key: "home"
+  },
+  {
+    label: "退出登录",
+    key: "logout"
+  }
+])
+
+onMounted(() => {
+  options.value[0].label = "你好:" + userInfo.username
+})
+
+function handleSelect(key) {
+  switch (key) {
+    case "mine":
+      router.push("/mine")
+      break
+    case "setting":
+      router.push("/setting")
+      break
+    case "home":
+      router.push("/")
+      break
+    case "logout":
+      userStore().logout()
+      message.success("退出登录成功")
+      setTimeout(() => {
+        router.push("/")
+      }, 1000)
+      break
+
+  }
+}
+
+const avatar = userInfo.avatar ? userInfo.avatar : "api/avatar/default.jpg"
 
 const router = useRouter()
 const route = useRoute()
@@ -59,7 +119,7 @@ const menuOptions = [
         {default: () => "用户管理"}
     ),
     key: "/admin/user",
-  },{
+  }, {
     label: () => h(
         RouterLink,
         {
@@ -71,7 +131,7 @@ const menuOptions = [
     ),
     key: "/admin/post",
   },
-  ]
+]
 
 </script>
 

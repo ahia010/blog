@@ -3,20 +3,30 @@ import {defineStore} from "pinia";
 
 export const userStore = defineStore('user', () => {
     const userInfo = reactive(
-        {username: '', token: '', role: ''});
-    const setUserInfo = (info) => {
-        userInfo.value.username = info.username;
-        userInfo.value.token = info.token;
-        userInfo.value.role = info.role;
+        {username: '', token: '', role: '',avatar:''});
+    const setUserInfo = (username,token,role,avatar) => {
+        userInfo.username = username;
+        userInfo.token = token;
+        userInfo.role = role;
+        userInfo.avatar = avatar;
     }
     const getUserInfo = () => {
         return userInfo;
     }
 
+    const logout = () => {
+        userInfo.username = '';
+        userInfo.token = '';
+        userInfo.role = '';
+        userInfo.avatar = '';
+    }
+
+
     return {
         getUserInfo,
         userInfo,
-        setUserInfo
+        setUserInfo,
+        logout
     }
 },{
     persist: true,

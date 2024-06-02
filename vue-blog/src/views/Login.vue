@@ -44,6 +44,8 @@ import {onMounted, reactive, ref} from 'vue'
 import {useMessage} from 'naive-ui'
 import {login} from "@/utils/request.js";
 import {userStore} from "@/stores/user.js";
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 
 const user= userStore();
@@ -73,13 +75,12 @@ async function goLogin() {
       });
       await login(loginForm).then(res => {
         if (res.data.code == 200) {
-
           msgReactive.content = "登录成功";
           msgReactive.type = "success";
-
-          user.setUserInfo(res.data.data);
-          console.log(1111)
-          console.log(user.getUserInfo())
+          const data = res.data.data
+          user.setUserInfo(data.username,data.token,data.role,data.avatar)
+          // console.log(user.getUserInfo());
+          router.push('/')
         } else {
           msgReactive.content = res.data.msg;
           msgReactive.type = "error";

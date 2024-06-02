@@ -7,17 +7,10 @@ import com.ahia.blog.util.TokenUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ahia.blog.entity.User;
 import com.ahia.blog.service.UserService;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -169,8 +162,8 @@ public class UserController {
      */
     @Authentication(role = {2})
     @GetMapping("page")
-    public Page<User> page(Page<User> page) {
-        return userService.page(page);
+    public R page(Page<User> page) {
+        return R.ok("查询成功", userService.page(page));
     }
 
     private String saveAvatar(MultipartFile files) {
@@ -186,6 +179,15 @@ public class UserController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @GetMapping("getUsername")
+    public R info(@RequestHeader(name = "Token",defaultValue="") String token){
+        try {
+            return R.ok("获取成功", TokenUtil.extractUsername(token));
+        } catch (Exception e) {
+            return R.error(401,"登录过期");
+        }
     }
 
 }

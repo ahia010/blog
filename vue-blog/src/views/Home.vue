@@ -12,11 +12,11 @@
                       <n-thing :title="item.title" :content-style="{marginTop: '10px'}">
                         <template #description>
                           <n-space size="small" style="margin-top: 4px">
-                            <template v-for="kind in item.kind">
+<!--                            <template v-for="kind in item.kind">-->
                               <n-tag :bordered="false" type="info" size="small">
-                                {{ kind }}
+                                {{ item.kind }}
                               </n-tag>
-                            </template>
+<!--                            </template>-->
                             <!--                            <n-tag :bordered="false" type="info" size="small">-->
                             <!--                              java-->
                             <!--                            </n-tag>-->
@@ -25,7 +25,7 @@
                             <!--                            </n-tag>-->
                           </n-space>
                         </template>
-                        {{ item.content }}
+                        {{ extractTextFromHtml(item.content) }}
                       </n-thing>
                     </n-list-item>
                   </template>
@@ -79,13 +79,13 @@
                 <n-text>浏览排行</n-text>
                 <n-list hoverable clickable>
                   <template v-for="item in viewRankingList">
-                  <n-list-item class="home-top" @click="goDetail(item.id)">
-                    <n-thing :title="item.title" content-style="margin-top: 10px;">
-                      <div class="home-top-content" :style="{maxWidth:topMaxWidth}">
-                        {{item.content}}
-                      </div>
-                    </n-thing>
-                  </n-list-item>
+                    <n-list-item class="home-top" @click="goDetail(item.id)">
+                      <n-thing :title="item.title" content-style="margin-top: 10px;">
+                        <div class="home-top-content" :style="{maxWidth:topMaxWidth}">
+                          {{ item.content }}
+                        </div>
+                      </n-thing>
+                    </n-list-item>
                   </template>
 
 
@@ -105,24 +105,41 @@ import {useRoute, useRouter} from "vue-router";
 import {getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {debounce} from "@/utils/debonce.js";
 import BaseLayout from "@/components/BaseLayout.vue";
+import {getHomeList} from "@/utils/request.js";
 
 
 const router = useRouter();
 const route = useRoute();
 const topMaxWidth = ref("");
+function extractTextFromHtml(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  return doc.body.textContent || '';
+}
 
-
-const homeList = reactive(Array.from({length: 10}, () => ({
+let homeList = ref(Array.from({length: 10}, () => ({
   id: '1',
   title: "相见恨晚",
   content: "奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪",
   kind: ["java", "vue"]
 })));
 
-const viewRankingList = reactive(Array.from({length:5 },()=>({
-  id:'1',
-  title:'文章标题',
-  content:'住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪\n' +
+
+onMounted(async () => {
+  await getHomeList({pageSize:10}).then(res => {
+    console.log(res.data)
+    if (res.data.code === 200)
+      homeList.value = res.data.data.records
+    else {
+      console.log(res.data.msg)
+    }
+  })
+})
+
+const viewRankingList = reactive(Array.from({length: 5}, () => ({
+  id: '1',
+  title: '文章标题',
+  content: '住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪\n' +
       '                        痛苦之王\n' +
       '                        开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的\n' +
       '                        孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦\n' +
