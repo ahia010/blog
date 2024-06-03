@@ -2,7 +2,7 @@
   <base-layout>
     <template #default>
       <n-layout>
-        <n-layout content-style="padding:20px 10vw;display:flex;gap:20px">
+        <n-layout content-style="padding:20px 10vw;display:flex;gap:20px" :style="{background:bg} ">
           <n-grid :x-gap="12">
             <n-grid-item :span="18">
               <n-card>
@@ -17,12 +17,6 @@
                                 {{ item.kind }}
                               </n-tag>
 <!--                            </template>-->
-                            <!--                            <n-tag :bordered="false" type="info" size="small">-->
-                            <!--                              java-->
-                            <!--                            </n-tag>-->
-                            <!--                            <n-tag :bordered="false" type="info" size="small">-->
-                            <!--                              vue-->
-                            <!--                            </n-tag>-->
                           </n-space>
                         </template>
                         {{ extractTextFromHtml(item.content) }}
@@ -30,22 +24,6 @@
                     </n-list-item>
                   </template>
 
-                  <!--                    <n-thing title="相见恨晚" content-style="margin-top: 10px;">-->
-                  <!--                      <template #description>-->
-                  <!--                        <n-space size="small" style="margin-top: 4px">-->
-                  <!--                          <n-tag :bordered="false" type="info" size="small">-->
-                  <!--                            java-->
-                  <!--                          </n-tag>-->
-                  <!--                          <n-tag :bordered="false" type="info" size="small">-->
-                  <!--                            vue-->
-                  <!--                          </n-tag>-->
-                  <!--                        </n-space>-->
-                  <!--                      </template>-->
-                  <!--                      奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王-->
-                  <!--                      开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的-->
-                  <!--                      孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光-->
-                  <!--                      停滞的海浪-->
-                  <!--                    </n-thing>-->
 
                 </n-list>
               </n-card>
@@ -102,11 +80,11 @@
 
 <script setup>
 import {useRoute, useRouter} from "vue-router";
-import {getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {getCurrentInstance, nextTick, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {debounce} from "@/utils/debonce.js";
 import BaseLayout from "@/components/BaseLayout.vue";
 import {getHomeList} from "@/utils/request.js";
-
+import bg from "@/assets/bg.jpg";
 
 const router = useRouter();
 const route = useRoute();
@@ -117,15 +95,15 @@ function extractTextFromHtml(html) {
   return doc.body.textContent || '';
 }
 
-let homeList = ref(Array.from({length: 10}, () => ({
-  id: '1',
-  title: "相见恨晚",
-  content: "奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪",
-  kind: ["java", "vue"]
-})));
+// let homeList = ref(Array.from({length: 10}, () => ({
+//   id: '1',
+//   title: "相见恨晚",
+//   content: "奋勇呀然后休息呀 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪",
+//   kind: ["java", "vue"]
+// })));
+let homeList = ref([]);
 
-
-onMounted(async () => {
+onBeforeMount(async () => {
   await getHomeList({pageSize:10}).then(res => {
     console.log(res.data)
     if (res.data.code === 200)
@@ -199,11 +177,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 
-.carousel-img {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-}
+
 
 .home-top-content {
   white-space: nowrap;

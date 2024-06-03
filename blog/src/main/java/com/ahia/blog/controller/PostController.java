@@ -20,6 +20,7 @@ import java.util.List;
 
 import static com.ahia.blog.entity.table.PostTableDef.POST;
 import static com.ahia.blog.entity.table.UserTableDef.USER;
+import static com.mybatisflex.core.query.QueryMethods.select;
 
 /**
  * 控制层。
@@ -56,7 +57,7 @@ public class PostController {
                 .build();
 
         postService.save(UpdateWrapper.of(newPost)
-                .setRaw(Post::getUserId, "(SELECT id FROM user WHERE username = '" + username + "')")
+                .setRaw(Post::getUserId, select(USER.ID).from(USER).where(USER.USERNAME.eq(username)))
                 .toEntity());
 
 
@@ -114,7 +115,7 @@ public class PostController {
 //                .innerJoin(USER).on(POST.USER_ID.eq(USER.ID))
 //                .where(POST.ID.eq(id))
 
-        return R.ok("获取成功",postService.getOne(queryWrapper));
+        return R.ok("获取成功", postService.getOne(queryWrapper));
     }
 
     /**

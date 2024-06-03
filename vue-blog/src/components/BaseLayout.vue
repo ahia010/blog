@@ -10,12 +10,15 @@
         </n-gradient-text>
         <n-menu   v-model:value="activeKey" mode="horizontal" :options="menuOptions" responsive/>
       </div>
-
       <div class="header-center">
-        <n-input size="medium" round placeholder="搜索" class="header-input">
-<!--          <template #suffix>-->
-<!--                      <n-icon :component="FlashOutline" />-->
-<!--          </template>-->
+        <n-input v-model:value="search" size="medium" round placeholder="搜索" class="header-input">
+          <template #suffix>
+            <n-button text  >
+                      <n-icon @click="goList()" size="20" :component="MdSearch">
+
+                      </n-icon>
+            </n-button>
+          </template>
         </n-input>
       </div>
       <div class="nav-right" v-if="user.userInfo.token===''">
@@ -24,14 +27,12 @@
       </div>
       <div class="nav-right" v-else>
         <n-dropdown trigger="hover" :options="options"  @select="handleSelect">
-          <n-image :src="avatar" preview-disabled  width="50"></n-image>
+          <n-image :src="avatar" preview-disabled  width="50" height="50" object-fit="cover"></n-image>
         </n-dropdown>
       </div>
-
     </n-layout-header>
-    <n-layout-content>
-      <slot name="default">
-      </slot>
+    <n-layout-content class="aaa">
+      <slot name="default"/>
     </n-layout-content>
     <BaseFooter/>
   </n-layout>
@@ -44,6 +45,21 @@ import logo from "@/assets/logo.svg";
 import BaseFooter from "@/components/BaseFooter.vue";
 import {userStore} from "@/stores/user.js";
 import {useMessage} from "naive-ui";
+import {MdSearch} from "@vicons/ionicons4";
+
+const search = ref("")
+const goList = () => {
+  if (search.value === "") {
+    message.info("请输入搜索内容")
+    return
+  }
+  router.push({
+    name: "list",
+    query: {
+      search: search.value
+    }
+  })
+}
 
 const message = useMessage();
 

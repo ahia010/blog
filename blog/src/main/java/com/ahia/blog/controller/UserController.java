@@ -5,6 +5,7 @@ import com.ahia.blog.security.Authentication;
 import com.ahia.blog.util.PasswordUtil;
 import com.ahia.blog.util.TokenUtil;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static com.ahia.blog.entity.table.UserTableDef.USER;
 
 
 /**
@@ -127,9 +130,35 @@ public class UserController {
      */
     @Authentication(role = {2})
     @PutMapping("save")
-    public boolean save(@RequestBody User user) {
-        return userService.updateById(user);
+    public R save(User user) {
+        if (user.getId() == null && !user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
+            if (userService.getOne(QueryWrapper.create().eq(User::getUsername, user.getUsername())) != null) {
+                return R.error("用户名已存在");
+            }
+            if (!user.getFile().isEmpty()){
+//                todo 存头像
+            }
+            userService.getMapper().insert(
+                    User.builder()
+                            .username(user.getUsername())
+                            .password(PasswordUtil.hashPassword(user.getPassword()))
+                            .email(user.getEmail())
+                            .phone(user.getPhone())
+                            .role(1)
+                            .status(1)
+                            .createTime(LocalDateTime.now())
+                            .updateTime(LocalDateTime.now())
+                            .build());
+            return R.ok("添加成功");
+        }
+        user.setUsername(null);
+        if (!user.getPassword().isEmpty())
+            user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+        if (userService.updateById(user))
+            return R.ok("修改成功");
+        return R.error("修改失败");
     }
+
 
     /**
      * 查询所有。
@@ -150,8 +179,8 @@ public class UserController {
      */
     @Authentication(role = {2})
     @GetMapping("getInfo/{id}")
-    public User getInfo(@PathVariable Serializable id) {
-        return userService.getById(id);
+    public R getInfo(@PathVariable Serializable id) {
+        return R.ok("获取成功", userService.getById(id));
     }
 
     /**
@@ -162,8 +191,18 @@ public class UserController {
      */
     @Authentication(role = {2})
     @GetMapping("page")
-    public R page(Page<User> page) {
-        return R.ok("查询成功", userService.page(page));
+    public R page(Page<User> page, User user) {
+        if (user.getUsername().isEmpty() && user.getEmail().isEmpty()) {
+            return R.ok("查询成功", userService.page(page));
+        }
+        if (user.getUsername().isEmpty())
+            user.setUsername(null);
+        if (user.getEmail().isEmpty())
+            user.setEmail(null);
+        QueryWrapper query = QueryWrapper.create()
+                .eq("username", user.getUsername())
+                .like("email", user.getEmail());
+        return R.ok("查询成功", userService.page(page, query));
     }
 
     private String saveAvatar(MultipartFile files) {
@@ -182,11 +221,11 @@ public class UserController {
     }
 
     @GetMapping("getUsername")
-    public R info(@RequestHeader(name = "Token",defaultValue="") String token){
+    public R info(@RequestHeader(name = "Token", defaultValue = "") String token) {
         try {
             return R.ok("获取成功", TokenUtil.extractUsername(token));
         } catch (Exception e) {
-            return R.error(401,"登录过期");
+            return R.error(401, "登录过期");
         }
     }
 

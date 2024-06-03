@@ -2,7 +2,7 @@ import {http} from "@/utils/http.js";
 
 const URL = {
     login: '/user/login',
-    register: '/register',
+    register: '/user/register',
     postList: '/post/list',
     userList: '/user/page',
 }
@@ -11,7 +11,7 @@ const URL = {
 const register = async (params) => {
     return http.request({
         url: URL.register,
-        method: 'GET',
+        method: 'POST',
         params: params
     })
 }
@@ -24,10 +24,27 @@ const login = async (params) => {
     })
 }
 
+const getUserInfo = async (id,headers)=>{
+    return http.request({
+        url: '/user/getInfo/'+id,
+        method: 'GET',
+        headers: headers
+    })
+}
+
+const saveUserRequest = async (params,headers)=>{
+    return http.request({
+        url: '/user/save',
+        method: 'PUT',
+        params:params,
+        headers: headers
+    })
+}
+
 const getPostList = async (params) => {
     return http.request({
-        url: URL.postList,
-        method: 'POST',
+        url: '/post/page',
+        method: 'GET',
         params: params
     })
 }
@@ -74,4 +91,4 @@ const getUserName = async (headers) => {
     })
 }
 
-export {login, register, getPostList, getUserList, addPost, getHomeList, getUserName,getPostDetail};
+export {login,saveUserRequest, register, getPostList, getUserList, addPost, getHomeList, getUserName,getPostDetail,getUserInfo}
