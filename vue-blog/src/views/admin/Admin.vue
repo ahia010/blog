@@ -1,13 +1,15 @@
 <template>
-  <n-layout has-sider>
+  <n-layout has-sider embedded>
     <n-layout-sider content-style="padding: 10px;minHeight:100vh;" width="250" bordered>
-      <n-flex justify="center" style="margin-bottom: 20px;">
+      <n-flex justify="center">
         <n-image width="35" preview-disabled :src="logo"/>
         <n-gradient-text :size="30" type="success">
           Ahia-Blog
         </n-gradient-text>
       </n-flex>
-      <n-divider/>
+      <n-divider >
+        菜单
+      </n-divider>
       <n-menu :options="menuOptions" v-model:value="activeKey"/>
     </n-layout-sider>
     <n-layout>

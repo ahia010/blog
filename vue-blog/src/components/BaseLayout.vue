@@ -99,7 +99,8 @@ onMounted(() => {
   options.value[0].label = "你好:"+user.userInfo.username
 })
 
-const userInfo = userStore().getUserInfo()
+const userInfo = user.getUserInfo()
+
 
 const avatar = userInfo.avatar ? userInfo.avatar : "api/avatar/default.jpg"
 
@@ -113,9 +114,9 @@ function handleSelect(key) {
     })
   }
   if (key === "mine") {
-    // router.push({
-    //   name: "mine"
-    // })
+    router.push({
+      name: "mine"
+    })
   }
   if (key === "setting") {
     // router.push({

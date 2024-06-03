@@ -1,29 +1,28 @@
 <template>
   <n-form
-      ref="formRef"
       inline
       label-placement="left"
       label-width="auto"
-      :model="formValue">
+      :model="searchFormValue">
     <n-form-item label="用户名:" path="username">
-      <n-input v-model:value="formValue.username" placeholder="输入用户名" />
+      <n-input v-model:value="searchFormValue.username" placeholder="输入用户名"/>
     </n-form-item>
     <n-form-item label="邮箱:" path="email">
-      <n-input v-model:value="formValue.email" placeholder="输入邮箱" />
+      <n-input v-model:value="searchFormValue.email" placeholder="输入邮箱"/>
     </n-form-item>
     <n-form-item>
-      <n-button attr-type="button" @click="handleValidateClick">
+      <n-button attr-type="button" @click="handleValidateClick()">
         搜索
       </n-button>
     </n-form-item>
     <n-form-item>
-      <n-button attr-type="button" @click="handleValidateClick">
+      <n-button attr-type="button" @click="handleValidateClick(false)">
         重置
       </n-button>
     </n-form-item>
   </n-form>
   <n-space style="margin-bottom: 10px">
-    <n-button>新增</n-button>
+    <n-button @click="save()">新增</n-button>
     <n-button>删除</n-button>
   </n-space>
   <n-space vertical :size="12">
@@ -37,6 +36,41 @@
     />
   </n-space>
   <n-pagination/>
+  <n-modal
+      v-model:show="showModal"
+      :mask-closable="false"
+      class="custom-card"
+      :title="isAdd ? '新增用户' : '编辑用户'"
+      preset="card"
+      style="width: 600px; position: fixed; top: 100px;left: 35%">
+    <n-form
+        ref="formRef"
+        :model="userFormValue"
+        label-placement="left"
+        label-width="auto">
+      <n-form-item label="用户名:" path="username">
+        <n-input v-model:value="userFormValue.username" placeholder="输入用户名"/>
+      </n-form-item>
+      <!--      <n-form-item label="头像" path="avatar">-->
+      <!--        <n-upload :default-upload="false"> 点击上传</n-upload>-->
+      <!--      </n-form-item>-->
+      <n-form-item label="密码:" path="password">
+        <n-input v-model:value="userFormValue.password" :placeholder="isAdd?'请输入密码':'未更改'"/>
+      </n-form-item>
+      <n-form-item label="邮箱:" path="email">
+        <n-input v-model:value="userFormValue.email" placeholder="输入邮箱"/>
+      </n-form-item>
+      <n-form-item label="电话:" path="phone">
+        <n-input v-model:value="userFormValue.phone" placeholder="输入电话"/>
+      </n-form-item>
+      <n-form-item>
+        <n-button attr-type="button" @click="saveUser()">
+          {{ isAdd ? '新增' : '保存' }}
+        </n-button>
+      </n-form-item>
+    </n-form>
+  </n-modal>
+
   <div>
     <input type="file" @change="onFileChange">
     <button @click="upload">Upload</button>
@@ -46,12 +80,58 @@
 <script setup>
 import {h, onMounted, reactive, ref} from 'vue'
 import {NButton, useMessage} from "naive-ui";
-import {getUserList} from "@/utils/request.js";
-import axios from "axios";
-import {useRouter} from "vue-router";
+import {getUserInfo, getUserList, saveUserRequest} from "@/utils/request.js";
 import {userStore} from "@/stores/user.js";
+import axios from "axios";
 
 const user = userStore();
+
+const isAdd = ref(false);
+
+const userFormValue = reactive({
+  id: "",
+  username: "",
+  password: "",
+  email: "",
+  phone: "",
+
+})
+
+const showModal = ref(false);
+
+async function save(row = null) {
+  userFormValue.username = userFormValue.password = userFormValue.email = userFormValue.phone = "";
+  if (row == null) {
+    isAdd.value = true;
+  } else {
+    console.log(row.id)
+    await getUserInfo(row.id, {
+      'Token': user.getUserInfo().token,
+      'Content-Type': 'application/json'
+    }).then(res => {
+      if (res.data.code === 200) {
+        userFormValue.username = res.data.data.username;
+        userFormValue.email = res.data.data.email;
+        userFormValue.phone = res.data.data.phone;
+      } else {
+        message.error(res.data.msg);
+      }
+    })
+  }
+
+
+  showModal.value = true;
+}
+
+async function saveUser() {
+    const headers = {
+    'Token': user.getUserInfo().token,
+    'Content-Type': 'application/json'
+  }
+    await saveUserRequest(userFormValue,headers).then(res=>{
+      console.log(res.data)
+    })
+}
 
 
 const file = ref(null);
@@ -77,19 +157,18 @@ const upload = async () => {
 };
 
 
-
-
-
 const formRef = ref(null);
 const message = useMessage();
-const formValue = ref({
-  title: "",
-  content: "",
+const searchFormValue = reactive({
+  username: "",
+  email: "",
 });
-function handleValidateClick(e) {
 
+function handleValidateClick(isSearch = true) {
+  if (!isSearch)
+    searchFormValue.username = searchFormValue.email = "";
+  getList();
 }
-
 
 
 const rowKey = (row) => row.id;
@@ -125,51 +204,57 @@ const columns = [
   {
     title: '状态',
     key: 'status',
+    render(row) {
+      return row.status === 1 ? '正常' : '已封禁'
+    },
     filterOptions: [{
       label: '正常',
-      value: '正常'
+      value: '1'
     },
       {
         label: '已封禁',
-        value: '已封禁'
+        value: '0'
       }],
     filter(value, row) {
       return ~row.status.indexOf(value)
     }
-  },{
+  }, {
     title: '创建时间',
     key: 'createTime',
     sorter: {
       compare: (a, b) => a.createTime - b.createTime,
       multiple: 1
     }
-  },{
+  }, {
     title: '更新时间',
     key: 'updateTime',
     sorter: {
       compare: (a, b) => a.updateTime - b.updateTime,
       multiple: 2
     }
-  },{
+  }, {
     title: '操作',
     key: 'operation',
-    render(row){
-      const edit = h(NButton,{
+    render(row) {
+      const edit = h(NButton, {
         type: 'primary',
-      },{
+        onClick: () => {
+          save(row)
+        }
+      }, {
         default: () => '编辑'
 
       })
       const del = h(
-          NButton,{
+          NButton, {
             type: 'error',
             style: {
               marginLeft: '10px'
             }
-          },{
+          }, {
             default: () => '删除'
           })
-      return [edit,del]
+      return [edit, del]
     }
   }
 ]
@@ -187,24 +272,28 @@ const columns = [
 let data = ref([])
 
 
-onMounted(async () => {
-  console.log(user.getUserInfo().token)
+onMounted(() => {
+  // console.log(user.getUserInfo().token)
+  getList()
+})
+
+
+async function getList() {
   const headers = {
     'Token': user.getUserInfo().token,
     'Content-Type': 'application/json'
   }
-  console.log(headers)
-  const res = await getUserList(null,headers);
+  // console.log(headers)
+  const res = await getUserList({pageSize: 10, ...searchFormValue}, headers);
   if (res.data.code === 200) {
     data.value = res.data.data.records;
-    // console.log(data)
   } else {
     message.error(res.data.msg);
-    // await router.push('/login')
+    router.push('/login')
   }
-})
-const checkedRowKeysRef = ref([]);
+}
 
+const checkedRowKeysRef = ref([]);
 
 
 </script>
