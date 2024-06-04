@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2024-05-11
  */
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/api/comment")
 public class CommentController {
 
     @Autowired

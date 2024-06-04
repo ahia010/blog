@@ -146,7 +146,7 @@ const post = ref({
 onMounted(async () => {
   await getPostDetail(route.params.id).then(res => {
     if (res.data.code !== 200) {
-      router.push({path: '/404'})
+      router.push({path: '/'})
     } else {
       post.value = res.data.data
     }

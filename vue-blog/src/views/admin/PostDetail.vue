@@ -44,8 +44,9 @@ import {onBeforeUnmount, ref, shallowRef, onMounted, reactive} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {useMessage} from "naive-ui";
 import {userStore} from "@/stores/user.js";
-import {useRouter,useRoute} from "vue-router";
-import {addPost} from "@/utils/request.js";
+import {useRouter, useRoute} from "vue-router";
+import {addPost, getPostDetail, updatePost} from "@/utils/request.js";
+
 const router = useRouter();
 const route = useRoute();
 
@@ -56,31 +57,42 @@ async function submit() {
     message.error('填写内容不能为空');
     return;
   }
-  if (route.path==='/admin/postDetail') {
-    message.success('提交成功')
-  } else {
-    let headers = {
-      'Content-Type': 'application/json',
-      'Token': user.userInfo.token
-    }
-
-    model.content = valueHtml.value
-    await addPost(model,headers).then(res=>{
-      if (res.data.code===200) {
+  let headers = {
+    'Content-Type': 'application/json',
+    'Token': user.userInfo.token
+  }
+  model.content = valueHtml.value
+  if (route.path === '/admin/postAdd') {
+    await addPost(model, headers).then(res => {
+      if (res.data.code === 200) {
         message.success('新增成功')
-        // router.go(-1)
-      } else if (res.data.code===401) {
+      } else if (res.data.code === 401) {
         message.error('登录过期，请重新登录')
         router.push('/login')
         user.logout()
-      }else
-       {
+      } else {
         message.error(res.data.msg)
       }
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err)
     })
     // message.success('新增成功')
+  } else {
+    model.id = route.params.id
+    await updatePost(model,headers).then(res => {
+      if (res.data.code === 200) {
+        message.success('修改成功')
+        router.go(-1)
+      } else if (res.data.code === 401) {
+        message.error('登录过期，请重新登录')
+        router.push('/login')
+        user.logout()
+      } else {
+        message.error(res.data.msg)
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 
@@ -103,6 +115,32 @@ const valueHtml = ref('<p>hello，在这里输入内容哦</p>')
 //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
 //   }, 1500)
 // })
+
+onMounted(() => {
+  console.log(route.path)
+  if (route.path === '/admin/postAdd') {
+    model.title = ''
+    model.kind = ''
+    valueHtml.value = "<p>hello，在这里输入内容哦</p>"
+  } else {
+    getDetailById()
+  }
+})
+
+async function getDetailById() {
+  await getPostDetail(route.params.id).then(res => {
+    if (res.data.code === 200) {
+      model.title = res.data.data.title
+      model.kind = res.data.data.kind
+      valueHtml.value = res.data.data.content
+    } else {
+      message.error(res.data.msg)
+    }
+  }).catch(err => {
+    console.log(err)
+  })
+}
+
 
 const mode = ref('default')
 

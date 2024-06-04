@@ -24,7 +24,7 @@ public class ImgController {
         this.resourceLoader = resourceLoader;
     }
 
-    @PostMapping("/uploads/img")
+    @PostMapping("/api/uploads/img")
     public R uploads(@RequestParam("file") MultipartFile[] file){
         List<String> list = new ArrayList<>();
         for (MultipartFile f : file) {
@@ -35,7 +35,7 @@ public class ImgController {
                 String newFilename = UUID.randomUUID() + extension;
                 Path path = Paths.get(UPLOADED_FOLDER+"img/" + newFilename);
                 Files.write(path, bytes);
-                list.add("/image/" + newFilename);
+                list.add("/api/image/" + newFilename);
             } catch (IOException e) {
                 e.printStackTrace();
                 R.error("上传失败");
@@ -43,7 +43,7 @@ public class ImgController {
         }
         return R.ok("上传成功",list);
     }
-    @PostMapping("/upload/img")
+    @PostMapping("/api/upload/img")
     public R upload(MultipartFile file){
         try {
             byte[] bytes = file.getBytes();
@@ -61,12 +61,12 @@ public class ImgController {
         }
     }
 
-    @GetMapping("/img/{filename:.+}")
+    @GetMapping("/api/img/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         Resource file = resourceLoader.getResource("file:" + Paths.get(UPLOADED_FOLDER+"img/", filename));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }
-    @GetMapping("/avatar/{filename:.+}")
+    @GetMapping("/api/avatar/{filename:.+}")
     public ResponseEntity<Resource> getAvatar(@PathVariable String filename) {
         Resource file = resourceLoader.getResource("file:" + Paths.get(UPLOADED_FOLDER+"avatar/", filename));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);

@@ -29,7 +29,7 @@ import static com.mybatisflex.core.query.QueryMethods.select;
  * @since 2024-05-11
  */
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/api/post")
 public class PostController {
 
     @Autowired
@@ -81,9 +81,15 @@ public class PostController {
      * @param post
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
+    @Authentication(role = {2})
     @PutMapping("update")
-    public boolean update(@RequestBody Post post) {
-        return postService.updateById(post);
+    public R update(Post post) {
+        if (post.getTitle() == null || post.getContent() == null || post.getKind() == null || post.getTitle().isEmpty() || post.getContent().isEmpty()) {
+            return R.error("标题、内容和类型不能为空");
+        }
+        if (postService.updateById(post))
+            return R.ok("修改成功");
+        return R.error("修改失败");
     }
 
     /**

@@ -34,7 +34,7 @@ import static com.ahia.blog.entity.table.UserTableDef.USER;
  * @since 2024-05-10
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired

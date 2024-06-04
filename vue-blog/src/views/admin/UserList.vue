@@ -79,7 +79,7 @@
 
 <script setup>
 import {h, onMounted, reactive, ref} from 'vue'
-import {NButton, useMessage} from "naive-ui";
+import {NButton, NImage, useMessage} from "naive-ui";
 import {deleteUserRequest, getUserInfo, getUserList, saveUserRequest} from "@/utils/request.js";
 import {userStore} from "@/stores/user.js";
 import axios from "axios";
@@ -226,6 +226,15 @@ const columns = [
   {
     title: '头像',
     key: 'avatar',
+    render(row) {
+      return h(NImage, {
+        src: row.avatar,
+        fit: 'cover',
+        width: 50,
+        height: 50,
+        previewDisabled:true
+      });
+    }
   },
   {
     title: '电话',

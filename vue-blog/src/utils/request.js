@@ -24,28 +24,28 @@ const login = async (params) => {
     })
 }
 
-const getUserInfo = async (id,headers)=>{
+const getUserInfo = async (id, headers) => {
     return http.request({
-        url: '/user/getInfo/'+id,
+        url: '/user/getInfo/' + id,
         method: 'GET',
         headers: headers
     })
 }
 
-const saveUserRequest = async (params,headers)=>{
+const saveUserRequest = async (params, headers) => {
     return http.request({
         url: '/user/save',
         method: 'PUT',
-        params:params,
+        params: params,
         headers: headers
     })
 }
 
-const deleteUserRequest = async (ids,headers)=>{
+const deleteUserRequest = async (ids, headers) => {
     return http.request({
         url: '/user/delete',
         method: 'DELETE',
-        params:ids,
+        params: ids,
         headers: headers
     })
 }
@@ -58,10 +58,10 @@ const getPostList = async (params) => {
     })
 }
 
-const getPostDetail =async (id)=>{
+const getPostDetail = async (id) => {
     return http.request({
-        url:'/post/getInfo/'+id,
-        method:'GET',
+        url: '/post/getInfo/' + id,
+        method: 'GET',
     })
 
 }
@@ -82,7 +82,14 @@ const addPost = async (params, headers) => {
         headers: headers,
         params: params
     })
-
+}
+const updatePost = async (params, headers) => {
+    return http.request({
+        url: '/post/update',
+        method: 'PUT',
+        headers: headers,
+        params: params
+    })
 }
 
 const getHomeList = async (params) => {
@@ -101,4 +108,17 @@ const getUserName = async (headers) => {
     })
 }
 
-export {login,deleteUserRequest,saveUserRequest, register, getPostList, getUserList, addPost, getHomeList, getUserName,getPostDetail,getUserInfo}
+export {
+    updatePost,
+    login,
+    deleteUserRequest,
+    saveUserRequest,
+    register,
+    getPostList,
+    getUserList,
+    addPost,
+    getHomeList,
+    getUserName,
+    getPostDetail,
+    getUserInfo
+}
