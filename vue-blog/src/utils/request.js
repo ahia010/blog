@@ -80,7 +80,7 @@ const addPost = async (params, headers) => {
         url: '/post/save',
         method: 'POST',
         headers: headers,
-        params: params
+        data: params
     })
 }
 const updatePost = async (params, headers) => {
@@ -88,7 +88,7 @@ const updatePost = async (params, headers) => {
         url: '/post/update',
         method: 'PUT',
         headers: headers,
-        params: params
+        data: params
     })
 }
 
@@ -107,8 +107,27 @@ const getUserName = async (headers) => {
         headers: headers
     })
 }
+const getUserInfoMy = async ( headers) => {
+    return http.request({
+        url: '/user/getUserInfo',
+        method: 'GET',
+        headers: headers
+    })
+}
+
+const updateUserInfo = async (params, headers) => {
+    return http.request({
+        url: '/user/update',
+        method: 'POST',
+        headers: headers,
+        params: params
+    })
+
+}
 
 export {
+    updateUserInfo,
+    getUserInfoMy,
     updatePost,
     login,
     deleteUserRequest,

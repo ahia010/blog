@@ -43,7 +43,7 @@ public class PostController {
      */
     @Authentication(role = {2})
     @PostMapping("save")
-    public R save(@RequestHeader(name = "Token", defaultValue = "") String token, Post post) {
+    public R save(@RequestHeader(name = "Token", defaultValue = "") String token, @RequestBody Post post) {
         String username = TokenUtil.extractUsername(token);
         if (post.getTitle() == null || post.getContent() == null) {
             return R.error("标题和内容不能为空");
@@ -59,7 +59,6 @@ public class PostController {
         postService.save(UpdateWrapper.of(newPost)
                 .setRaw(Post::getUserId, select(USER.ID).from(USER).where(USER.USERNAME.eq(username)))
                 .toEntity());
-
 
         return R.ok("添加成功");
     }
@@ -83,7 +82,7 @@ public class PostController {
      */
     @Authentication(role = {2})
     @PutMapping("update")
-    public R update(Post post) {
+    public R update(@RequestBody Post post) {
         if (post.getTitle() == null || post.getContent() == null || post.getKind() == null || post.getTitle().isEmpty() || post.getContent().isEmpty()) {
             return R.error("标题、内容和类型不能为空");
         }

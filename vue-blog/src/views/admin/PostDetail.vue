@@ -53,7 +53,7 @@ const route = useRoute();
 const user = userStore();
 
 async function submit() {
-  if (!model.title || !model.kind || !valueHtml.value) {
+  if (!model.title || !model.kind || valueHtml.value.length===0) {
     message.error('填写内容不能为空');
     return;
   }
@@ -76,7 +76,6 @@ async function submit() {
     }).catch(err => {
       console.log(err)
     })
-    // message.success('新增成功')
   } else {
     model.id = route.params.id
     await updatePost(model,headers).then(res => {

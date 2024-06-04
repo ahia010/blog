@@ -12,14 +12,17 @@
                       <n-thing :title="item.title" :content-style="{marginTop: '10px'}">
                         <template #description>
                           <n-space size="small" style="margin-top: 4px">
-<!--                            <template v-for="kind in item.kind">-->
-                              <n-tag :bordered="false" type="info" size="small">
-                                {{ item.kind }}
-                              </n-tag>
-<!--                            </template>-->
+                            <!--                            <template v-for="kind in item.kind">-->
+                            <n-tag :bordered="false" type="info" size="small">
+                              {{ item.kind }}
+                            </n-tag>
+                            <!--                            </template>-->
                           </n-space>
                         </template>
-                        {{ extractTextFromHtml(item.content) }}
+                        <n-ellipsis :line-clamp="2" :tooltip="false">
+                          {{ extractTextFromHtml(item.content) }}
+                        </n-ellipsis>
+
                       </n-thing>
                     </n-list-item>
                   </template>
@@ -34,7 +37,7 @@
                   <n-image
                       style="margin-bottom: 20px;"
                       width="100"
-                      src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                      src="/api/avatar/admin.jpg"
                       preview-disabled
                   />
                 </n-flex>
@@ -89,6 +92,7 @@ import bg from "@/assets/bg.jpg";
 const router = useRouter();
 const route = useRoute();
 const topMaxWidth = ref("");
+
 function extractTextFromHtml(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
@@ -104,7 +108,7 @@ function extractTextFromHtml(html) {
 let homeList = ref([]);
 
 onBeforeMount(async () => {
-  await getHomeList({pageSize:10}).then(res => {
+  await getHomeList({pageSize: 10}).then(res => {
     console.log(res.data)
     if (res.data.code === 200)
       homeList.value = res.data.data.records
@@ -176,7 +180,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-
 
 
 .home-top-content {

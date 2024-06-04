@@ -75,9 +75,10 @@ public class UserController {
      * @param user
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
-    @Authentication(role = {1})
+    @Authentication(role = {1,2})
     @PostMapping("update")
     public R update(User user) {
+        System.out.println(user);
         if (TokenUtil.extractUsername(user.getToken()).equals(user.getUsername())) {
             if (user.getPassword() != null && user.getNewPassword() != null) {
                 User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()));
@@ -102,7 +103,7 @@ public class UserController {
                     .set("email", user.getEmail())
                     .set("phone", user.getPhone())
                     .set("updateTime", LocalDateTime.now())
-                    .where("username", user.getUsername())
+                    .where(User::getUsername).eq(user.getUsername())
                     .update();
             return R.ok("修改成功");
 
@@ -232,6 +233,21 @@ public class UserController {
     public R info(@RequestHeader(name = "Token", defaultValue = "") String token) {
         try {
             return R.ok("获取成功", TokenUtil.extractUsername(token));
+        } catch (Exception e) {
+            return R.error(401, "登录过期");
+        }
+    }
+
+    @GetMapping("getUserInfo")
+    public R getUserInfo(@RequestHeader(name = "Token", defaultValue = "") String token) {
+        try {
+            String username = TokenUtil.extractUsername(token);
+            return R.ok("获取成功",
+                    QueryChain.of(User.class)
+                            .select(USER.ALL_COLUMNS)
+                            .from(USER)
+                            .eq(User::getUsername, username)
+                            .one());
         } catch (Exception e) {
             return R.error(401, "登录过期");
         }

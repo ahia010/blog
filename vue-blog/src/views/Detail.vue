@@ -15,7 +15,7 @@
                 </n-space>
                 <n-divider/>
               </n-layout>
-              <n-layout v-html="post.content"></n-layout>
+              <div v-html="highlightedContent"></div>
             </n-card>
           </n-gi>
           <n-gi :span="6">
@@ -98,6 +98,9 @@ import BaseLayout from "@/components/BaseLayout.vue";
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, reactive, ref} from "vue";
 import {getPostDetail} from "@/utils/request.js";
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
+
 
 const commentList = ref(Array.from({length: 12}, () => ({
   username: "1",
@@ -143,16 +146,29 @@ const post = ref({
       "</div>"
 });
 
+const highlightedContent = ref('');
+
 onMounted(async () => {
   await getPostDetail(route.params.id).then(res => {
     if (res.data.code !== 200) {
       router.push({path: '/'})
     } else {
       post.value = res.data.data
+      getHighLighted()
     }
   })
+
+
 })
 
+function getHighLighted() {
+  highlightedContent.value = post.value.content.replace(/<pre><code class="(.*?)">([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
+    const highlightedCode = hljs.highlightAuto(code).value;
+    return `<pre><code class="hljs" style="width: fit-content">${highlightedCode}</code></pre>`;
+    // console.log(lang, code)
+    // return `<pre><code class="hljs ${lang}"></code></pre>`;
+  });
+}
 
 </script>
 

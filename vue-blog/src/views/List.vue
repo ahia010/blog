@@ -20,7 +20,9 @@
                       </n-tag>
                     </n-space>
                   </template>
+                  <n-ellipsis :line-clamp="2" :tooltip="false">
                   {{ extractTextFromHtml(item.content) }}
+                  </n-ellipsis>
                 </n-thing>
               </n-list-item>
             </template>
