@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,13 +114,17 @@ public class UserController {
     /**
      * 根据主键删除。
      *
-     * @param id 主键
+     * @param ids 数组列表
      * @return {@code true} 删除成功，{@code false} 删除失败
      */
     @Authentication(role = {2})
-    @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Serializable id) {
-        return userService.removeById(id);
+    @DeleteMapping("delete")
+    public R remove(Integer[] ids) {
+        if (userService.removeByIds(Arrays.asList(ids)))
+            return R.ok("删除成功");
+        return R.error("删除失败");
+//        System.out.println(Arrays.toString(ids));
+//        return R.ok("删除成功");
     }
 
     /**
@@ -131,18 +136,20 @@ public class UserController {
     @Authentication(role = {2})
     @PutMapping("save")
     public R save(User user) {
+        System.out.println(user);
         if (user.getId() == null && !user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
             if (userService.getOne(QueryWrapper.create().eq(User::getUsername, user.getUsername())) != null) {
                 return R.error("用户名已存在");
             }
-            if (!user.getFile().isEmpty()){
-//                todo 存头像
+            if (user.getFile() != null && !user.getFile().isEmpty()) {
+                user.setAvatar(saveAvatar(user.getFile()));
             }
-            userService.getMapper().insert(
+            userService.save(
                     User.builder()
                             .username(user.getUsername())
                             .password(PasswordUtil.hashPassword(user.getPassword()))
                             .email(user.getEmail())
+                            .avatar(user.getAvatar())
                             .phone(user.getPhone())
                             .role(1)
                             .status(1)
@@ -156,6 +163,7 @@ public class UserController {
             user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
         if (userService.updateById(user))
             return R.ok("修改成功");
+
         return R.error("修改失败");
     }
 

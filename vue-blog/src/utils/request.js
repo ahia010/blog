@@ -41,6 +41,15 @@ const saveUserRequest = async (params,headers)=>{
     })
 }
 
+const deleteUserRequest = async (ids,headers)=>{
+    return http.request({
+        url: '/user/delete',
+        method: 'DELETE',
+        params:ids,
+        headers: headers
+    })
+}
+
 const getPostList = async (params) => {
     return http.request({
         url: '/post/page',
@@ -86,9 +95,10 @@ const getHomeList = async (params) => {
 
 const getUserName = async (headers) => {
     return http.request({
-        url: '/user/getUserName',
-        method: 'GET'
+        url: '/user/getUsername',
+        method: 'GET',
+        headers: headers
     })
 }
 
-export {login,saveUserRequest, register, getPostList, getUserList, addPost, getHomeList, getUserName,getPostDetail,getUserInfo}
+export {login,deleteUserRequest,saveUserRequest, register, getPostList, getUserList, addPost, getHomeList, getUserName,getPostDetail,getUserInfo}

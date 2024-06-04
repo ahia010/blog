@@ -1,15 +1,15 @@
 <template>
-  <n-layout has-sider embedded>
+  <n-layout has-sider>
     <n-layout-sider content-style="padding: 10px;minHeight:100vh;" width="250" bordered>
-      <n-flex justify="center">
+      <n-flex justify="center" style="margin-bottom: 30px">
         <n-image width="35" preview-disabled :src="logo"/>
         <n-gradient-text :size="30" type="success">
           Ahia-Blog
         </n-gradient-text>
       </n-flex>
-      <n-divider >
-        菜单
-      </n-divider>
+      <!--      <n-divider >-->
+      <!--        菜单-->
+      <!--      </n-divider>-->
       <n-menu :options="menuOptions" v-model:value="activeKey"/>
     </n-layout-sider>
     <n-layout>
@@ -36,6 +36,7 @@ import {useRouter, useRoute, RouterLink} from "vue-router";
 import {h, onMounted, ref} from "vue";
 import {userStore} from "@/stores/user.js";
 import {useMessage} from "naive-ui";
+import {getUserName} from "@/utils/request.js";
 
 const message = useMessage();
 
@@ -65,8 +66,27 @@ const options = ref([
   }
 ])
 
+async function getUser() {
+  const headers = {
+    Token: userInfo.token,
+    "Content-Type": "application/json"
+  }
+  await getUserName(headers)
+    .then(res => {
+      if (res.data.code !== 200) {
+        router.push({name: "login"})
+        // options.value[0].label = "你好:" + res.data.username
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      router.push({name: "login"})
+    })
+}
+
 onMounted(() => {
   options.value[0].label = "你好:" + userInfo.username
+  getUser()
 })
 
 function handleSelect(key) {

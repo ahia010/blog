@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <template #default>
-      <n-layout content-style="padding:20px 10vw;display:flex;gap:20px">
+      <n-layout content-style="padding:20px 10vw;display:flex;gap:20px;minHeight:80vh">
         <n-card>
           <n-grid :x-gap="12">
             <n-gi :span="6">
@@ -14,6 +14,7 @@
                 <n-image width="300" height="300"
                          :src="user.getUserInfo().avatar==null?'api/avatar/default.jpg':user.getUserInfo().avatar"/>
               </div>
+
             </n-gi>
             <n-gi :span="18">
               <n-card content-style="padding: 0;">
@@ -21,7 +22,7 @@
                     type="line"
                     size="large"
                     :tabs-padding="20"
-                    pane-style="padding: 20px;"
+                    pane-style="padding: 20px;height: 300px;"
                 >
                   <n-tab-pane name="个人信息">
                     PARKLIFE
@@ -33,7 +34,6 @@
               </n-card>
             </n-gi>
           </n-grid>
-
 
         </n-card>
       </n-layout>

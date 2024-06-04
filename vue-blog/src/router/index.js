@@ -59,7 +59,7 @@ const router = createRouter({
                     name: 'post',
                     component: PostList
                 },{
-                    path:'postDetail',
+                    path:'postDetail/:id',
                     name:'postDetail',
                     component:PostDetail
                 },{

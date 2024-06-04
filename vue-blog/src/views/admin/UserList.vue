@@ -23,7 +23,7 @@
   </n-form>
   <n-space style="margin-bottom: 10px">
     <n-button @click="save()">新增</n-button>
-    <n-button>删除</n-button>
+    <n-button @click="delUser(null)">删除</n-button>
   </n-space>
   <n-space vertical :size="12">
     <n-data-table
@@ -32,7 +32,7 @@
         :data="data"
         :row-key="rowKey"
         @update:checked-row-keys="handleCheck"
-
+        min-height="500"
     />
   </n-space>
   <n-pagination/>
@@ -71,16 +71,16 @@
     </n-form>
   </n-modal>
 
-  <div>
-    <input type="file" @change="onFileChange">
-    <button @click="upload">Upload</button>
-  </div>
+  <!--  <div>-->
+  <!--    <input type="file" @change="onFileChange">-->
+  <!--    <button @click="upload">Upload</button>-->
+  <!--  </div>-->
 </template>
 
 <script setup>
 import {h, onMounted, reactive, ref} from 'vue'
 import {NButton, useMessage} from "naive-ui";
-import {getUserInfo, getUserList, saveUserRequest} from "@/utils/request.js";
+import {deleteUserRequest, getUserInfo, getUserList, saveUserRequest} from "@/utils/request.js";
 import {userStore} from "@/stores/user.js";
 import axios from "axios";
 
@@ -88,19 +88,23 @@ const user = userStore();
 
 const isAdd = ref(false);
 
-const userFormValue = reactive({
+let userFormValue = reactive({
   id: "",
   username: "",
   password: "",
   email: "",
   phone: "",
+  role: "",
+  createTime: "",
+  updateTime: "",
 
 })
 
 const showModal = ref(false);
 
 async function save(row = null) {
-  userFormValue.username = userFormValue.password = userFormValue.email = userFormValue.phone = "";
+  console.log(1)
+  userFormValue.id = userFormValue.username = userFormValue.password = userFormValue.email = userFormValue.phone = userFormValue.role = userFormValue.createTime = userFormValue.updateTime = "";
   if (row == null) {
     isAdd.value = true;
   } else {
@@ -110,9 +114,7 @@ async function save(row = null) {
       'Content-Type': 'application/json'
     }).then(res => {
       if (res.data.code === 200) {
-        userFormValue.username = res.data.data.username;
-        userFormValue.email = res.data.data.email;
-        userFormValue.phone = res.data.data.phone;
+        userFormValue = res.data.data
       } else {
         message.error(res.data.msg);
       }
@@ -124,13 +126,20 @@ async function save(row = null) {
 }
 
 async function saveUser() {
-    const headers = {
+  const headers = {
     'Token': user.getUserInfo().token,
     'Content-Type': 'application/json'
   }
-    await saveUserRequest(userFormValue,headers).then(res=>{
-      console.log(res.data)
-    })
+  await saveUserRequest(userFormValue, headers).then(res => {
+    console.log(res.data)
+    if (res.data.code === 200) {
+      message.success('保存成功')
+      showModal.value = false;
+      getList()
+    } else {
+      message.error(res.data.msg);
+    }
+  })
 }
 
 
@@ -175,6 +184,31 @@ const rowKey = (row) => row.id;
 
 function handleCheck(rowKeys) {
   checkedRowKeysRef.value = rowKeys;
+}
+
+async function delUser(param) {
+  const ids = new URLSearchParams();
+  if (param == null) {
+    if (checkedRowKeysRef.value.length === 0) {
+      message.error('请选择要删除的数据')
+      return
+    }
+    checkedRowKeysRef.value.forEach(e => {
+      ids.append('ids', e)
+    })
+  } else
+    ids.append('ids', param)
+  await deleteUserRequest(ids, {
+    'Token': user.getUserInfo().token,
+    'Content-Type': 'application/json'
+  }).then(res => {
+    if (res.data.code === 200) {
+      message.success('删除成功')
+      getList()
+    } else {
+      message.error(res.data.msg);
+    }
+  })
 }
 
 const columns = [
@@ -250,6 +284,9 @@ const columns = [
             type: 'error',
             style: {
               marginLeft: '10px'
+            },
+            onClick: () => {
+              delUser(row.id)
             }
           }, {
             default: () => '删除'
