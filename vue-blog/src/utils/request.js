@@ -122,10 +122,17 @@ const updateUserInfo = async (params, headers) => {
         headers: headers,
         params: params
     })
-
 }
-
+const uploadListImg = (params, headers) => {
+    return http.request({
+        url: '/uploads/img',
+        method: 'POST',
+        headers: headers,
+        data: params
+    })
+}
 export {
+    uploadListImg,
     updateUserInfo,
     getUserInfoMy,
     updatePost,

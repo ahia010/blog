@@ -130,8 +130,14 @@ public class PostController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public R page(Page<Post> page) {
-        return R.ok("获取成功", postService.page(page));
+    public R page(Page<Post> page, String search) {
+        if (search == null || search.isEmpty())
+            return R.ok("获取成功", postService.page(page));
+        QueryWrapper queryWrapper =  QueryWrapper.create()
+                .where(POST.TITLE.like(search))
+                .or(POST.CONTENT.like(search))
+                .or(POST.KIND.like(search));
+        return R.ok("获取成功", postService.page(page,queryWrapper));
     }
 
 }

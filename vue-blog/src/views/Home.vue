@@ -48,7 +48,7 @@
                   </n-flex>
                   <n-flex vertical>
                     <n-text>更新时间</n-text>
-                    <n-text>2021-10-10</n-text>
+                    <n-text>2024-10-10</n-text>
                   </n-flex>
                   <n-flex vertical>
                     <n-text>评论数</n-text>
@@ -59,11 +59,13 @@
               <n-card style="margin-top:20px">
                 <n-text>浏览排行</n-text>
                 <n-list hoverable clickable>
-                  <template v-for="item in viewRankingList">
+                  <n-list-item class="home-top" :v-show="false">
+                  </n-list-item>
+                  <template v-for="item in homeList.slice(0,5).reverse()">
                     <n-list-item class="home-top" @click="goDetail(item.id)">
                       <n-thing :title="item.title" content-style="margin-top: 10px;">
                         <div class="home-top-content" :style="{maxWidth:topMaxWidth}">
-                          {{ item.content }}
+                          {{ extractTextFromHtml(item.content)}}
                         </div>
                       </n-thing>
                     </n-list-item>
@@ -110,8 +112,9 @@ let homeList = ref([]);
 onBeforeMount(async () => {
   await getHomeList({pageSize: 10}).then(res => {
     console.log(res.data)
-    if (res.data.code === 200)
+    if (res.data.code === 200){
       homeList.value = res.data.data.records
+    }
     else {
       console.log(res.data.msg)
     }
@@ -128,6 +131,7 @@ const viewRankingList = reactive(Array.from({length: 5}, () => ({
       '                        深海的光\n' +
       '                        停滞的海浪'
 })))
+// let viewRankingList = ref([...homeList.value.slice(0, 5)]);
 
 function goDetail(id) {
   router.push({

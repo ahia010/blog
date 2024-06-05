@@ -53,7 +53,7 @@ const options = ref([
     key: "mine"
   },
   {
-    label: "设置设置设置设置设置设置设置",
+    label: "设置",
     key: "setting"
   },
   {

@@ -47,9 +47,10 @@ import {userStore} from "@/stores/user.js";
 import {useMessage} from "naive-ui";
 import {MdSearch} from "@vicons/ionicons4";
 
+
 const search = ref("")
-const goList = () => {
-  if (search.value === "") {
+function goList() {
+  if (search.value ===undefined||search.value === "") {
     message.info("请输入搜索内容")
     return
   }
@@ -97,6 +98,10 @@ const options =ref([
 ])
 onMounted(() => {
   options.value[0].label = "你好:"+user.userInfo.username
+  console.log(route.query)
+  if (route.query.serach!==null) {
+    search.value = route.query.search
+  }
 })
 
 const userInfo = user.getUserInfo()

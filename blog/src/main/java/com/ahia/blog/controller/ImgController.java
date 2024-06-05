@@ -25,7 +25,7 @@ public class ImgController {
     }
 
     @PostMapping("/api/uploads/img")
-    public R uploads(@RequestParam("file") MultipartFile[] file){
+    public R uploads(@RequestParam("files[]") MultipartFile[] file){
         List<String> list = new ArrayList<>();
         for (MultipartFile f : file) {
             try {
@@ -35,7 +35,7 @@ public class ImgController {
                 String newFilename = UUID.randomUUID() + extension;
                 Path path = Paths.get(UPLOADED_FOLDER+"img/" + newFilename);
                 Files.write(path, bytes);
-                list.add("/api/image/" + newFilename);
+                list.add("/api/img/" + newFilename);
             } catch (IOException e) {
                 e.printStackTrace();
                 R.error("上传失败");

@@ -35,7 +35,7 @@
 
 <script setup>
 import BaseLayout from "@/components/BaseLayout.vue";
-import {onBeforeMount, reactive, ref} from "vue";
+import {onBeforeMount, reactive, ref, watch} from "vue";
 import {getPostList} from "@/utils/request.js";
 import {useRouter,useRoute} from "vue-router";
 
@@ -63,6 +63,8 @@ async function getList() {
     searchForm.pageSize = 10
   else searchForm.pageSize = route.query.pageSize
 
+  if (route.query.search)
+    searchForm.search = route.query.search
   await getPostList(searchForm).then(res => {
     if (res.data.code === 200)
       postList.value = res.data.data.records
@@ -77,7 +79,10 @@ function goDetail(id) {
     }
   })
 }
-
+watch(() => route.query, () => {
+  console.log("1234564964654")
+  getList()
+})
 
 </script>
 
