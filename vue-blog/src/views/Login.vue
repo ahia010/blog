@@ -29,6 +29,7 @@
         <n-flex justify="end" style="padding: 10px">
           <n-button :bordered="false" size="large" text @click="message.info('请联系管理员处理')">忘记密码？</n-button>
         </n-flex>
+
         <n-divider>
           第三方登录
         </n-divider>

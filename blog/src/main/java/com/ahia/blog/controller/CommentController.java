@@ -35,6 +35,7 @@ public class CommentController {
      * @param comment 
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
+    @Authentication(role = {1,2})
     @PostMapping("save")
     public boolean save(@RequestBody Comment comment) {
         return commentService.save(comment);
@@ -45,7 +46,9 @@ public class CommentController {
      *
      * @param id 主键
      * @return {@code true} 删除成功，{@code false} 删除失败
+     * //todo 1
      */
+    @Authentication(role = {1,2})
     @DeleteMapping("remove/{id}")
     public boolean remove(@PathVariable Serializable id) {
         return commentService.removeById(id);
@@ -79,6 +82,7 @@ public class CommentController {
      * @param id 主键
      * @return 详情
      */
+    @Authentication(role = {2})
     @GetMapping("getInfo/{id}")
     public Comment getInfo(@PathVariable Serializable id) {
         return commentService.getById(id);
@@ -90,6 +94,7 @@ public class CommentController {
      * @param page 分页对象
      * @return 分页对象
      */
+    @Authentication(role = {2})
     @GetMapping("page")
     public Page<Comment> page(Page<Comment> page) {
         return commentService.page(page);

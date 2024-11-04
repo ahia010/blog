@@ -27,12 +27,7 @@ import java.util.UUID;
 import static com.ahia.blog.entity.table.UserTableDef.USER;
 
 
-/**
- * 控制层。
- *
- * @author ahia
- * @since 2024-05-10
- */
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -59,7 +54,7 @@ public class UserController {
         userService.save(User.builder()
                 .username(user.getUsername())
                 .password(PasswordUtil.hashPassword(user.getPassword()))
-                .avatar("/avatar/default.jpg")
+                .avatar("/api/avatar/default.jpg")
                 .role(1)
                 .status(1)
                 .createTime(LocalDateTime.now())
@@ -69,12 +64,7 @@ public class UserController {
         return R.ok("注册成功");
     }
 
-    /**
-     * 添加。
-     *
-     * @param user
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
+
     @Authentication(role = {1,2})
     @PostMapping("update")
     public R update(User user) {
@@ -112,12 +102,25 @@ public class UserController {
         return R.error("系统错误");
     }
 
-    /**
-     * 根据主键删除。
-     *
-     * @param ids 数组列表
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
+
+    @RequestMapping("/chargePassword")
+    public R chargePassword(User user) {
+        if (user.getUsername() == null || user.getPassword() == null || user.getNewPassword() == null) {
+            return R.error("用户名、密码和新密码不能为空");
+        }
+        User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()));
+        if (user1 == null || !PasswordUtil.verifyPassword(user.getPassword(), user1.getPassword())) {
+            return R.error(401, "密码错误");
+        }
+        UpdateChain.of(User.class)
+                .set("password", PasswordUtil.hashPassword(user.getNewPassword()))
+                .set("updateTime", LocalDateTime.now())
+                .where("username", user.getUsername())
+                .update();
+        return R.ok("修改成功");
+    }
+
+
     @Authentication(role = {2})
     @DeleteMapping("delete")
     public R remove(Integer[] ids) {
@@ -222,7 +225,7 @@ public class UserController {
             String newFilename = UUID.randomUUID() + extension;
             Path path = Paths.get("./upload/avatar/" + newFilename);
             Files.write(path, bytes);
-            return "/avatar/" + newFilename;
+            return "api/avatar/" + newFilename;
         } catch (IOException e) {
             e.printStackTrace();
         }

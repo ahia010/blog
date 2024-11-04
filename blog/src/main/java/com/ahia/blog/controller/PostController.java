@@ -22,12 +22,7 @@ import static com.ahia.blog.entity.table.PostTableDef.POST;
 import static com.ahia.blog.entity.table.UserTableDef.USER;
 import static com.mybatisflex.core.query.QueryMethods.select;
 
-/**
- * 控制层。
- *
- * @author ahia
- * @since 2024-05-11
- */
+
 @RestController
 @RequestMapping("/api/post")
 public class PostController {
