@@ -151,6 +151,20 @@ public class PostController {
     }
 
 
+    @GetMapping("getHome")
+    public R getHome() {
+        QueryWrapper queryWrapperPosts = QueryWrapper.create()
+                .select(POST.ALL_COLUMNS, USER.USERNAME)
+                .from(POST)
+                .innerJoin(USER).on(POST.USER_ID.eq(USER.ID))
+                .orderBy(POST.UPDATE_TIME.desc())
+                .limit(10);
+        Map<String, Object> map = new HashMap<>();
+        map.put("posts", postService.list(queryWrapperPosts));
+        map.put("comment",commentService.count());
+        map.put("lastPost",QueryChain.of(Post.class).select().from(POST).orderBy(Post::getUpdateTime).desc().limit(1).one());
+        return R.ok("获取成功", map);
+    }
 
 
 }
