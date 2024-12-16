@@ -131,7 +131,19 @@ const uploadListImg = (params, headers) => {
         data: params
     })
 }
+
+const addPostComment = async (params, headers) => {
+    return http.request({
+        url: '/comment/save',
+        method: 'POST',
+        headers: headers,
+        data: params
+    })
+}
+
+
 export {
+    addPostComment,
     uploadListImg,
     updateUserInfo,
     getUserInfoMy,
