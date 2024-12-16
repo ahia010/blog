@@ -3,6 +3,7 @@ package com.ahia.blog.controller;
 import com.ahia.blog.entity.R;
 import com.ahia.blog.entity.User;
 import com.ahia.blog.security.Authentication;
+import com.ahia.blog.service.CommentService;
 import com.ahia.blog.util.TokenUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryChain;
@@ -16,8 +17,11 @@ import com.ahia.blog.service.PostService;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.ahia.blog.entity.table.CommentTableDef.COMMENT;
 import static com.ahia.blog.entity.table.PostTableDef.POST;
 import static com.ahia.blog.entity.table.UserTableDef.USER;
 import static com.mybatisflex.core.query.QueryMethods.select;
@@ -29,6 +33,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 添加。
@@ -114,8 +121,16 @@ public class PostController {
 //                .from(POST)
 //                .innerJoin(USER).on(POST.USER_ID.eq(USER.ID))
 //                .where(POST.ID.eq(id))
+        QueryWrapper queryWrapper1 = QueryWrapper.create()
+                .select(COMMENT.ALL_COLUMNS, USER.USERNAME, USER.AVATAR)
+                .from(COMMENT)
+                .innerJoin(USER).on(COMMENT.USER_ID.eq(USER.ID))
+                .where(COMMENT.POST_ID.eq(id));
 
-        return R.ok("获取成功", postService.getOne(queryWrapper));
+        Map<String, Object> map = new HashMap<>();
+        map.put("post", postService.getOne(queryWrapper));
+        map.put("comments", commentService.list(queryWrapper1));
+        return R.ok("获取成功", map);
     }
 
     /**
@@ -128,11 +143,11 @@ public class PostController {
     public R page(Page<Post> page, String search) {
         if (search == null || search.isEmpty())
             return R.ok("获取成功", postService.page(page));
-        QueryWrapper queryWrapper =  QueryWrapper.create()
+        QueryWrapper queryWrapper = QueryWrapper.create()
                 .where(POST.TITLE.like(search))
                 .or(POST.CONTENT.like(search))
                 .or(POST.KIND.like(search));
-        return R.ok("获取成功", postService.page(page,queryWrapper));
+        return R.ok("获取成功", postService.page(page, queryWrapper));
     }
 
 }
