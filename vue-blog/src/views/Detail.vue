@@ -34,11 +34,11 @@
                         placeholder="请输入评论内容"
                         style="margin-bottom: 20px;"
                     />
-                    <n-button block>发表评论</n-button>
+                    <n-button block @click="comment()">发表评论</n-button>
                   </div>
                 </template>
                 <n-scrollbar style="height: 60vh">
-                  <template v-for="item in commentList">
+                  <template v-if="commentList.length>0" v-for="item in commentList">
                     <n-list-item>
                       <!--                      <n-grid style="margin-left: 20px;">-->
                       <!--                        <n-grid-item :span="3">-->
@@ -72,7 +72,7 @@
                         <div>
                           <n-space justify="start">
                             <n-text>用户名:{{ item.username }}</n-text>
-                            <n-text>时间 {{ item.time }}</n-text>
+                            <n-text>时间 {{ item.createTime }}</n-text>
                           </n-space>
                           <n-space style="margin-top: 5px">
                             <n-text>{{ item.content }}</n-text>
@@ -81,6 +81,11 @@
 
                       </n-flex>
                     </n-list-item>
+                  </template>
+                  <template v-else>
+                    <div style="width: 100%;height: 60vh;display: flex;align-items: center;justify-content: center">
+                      <span style="font-size: 20px">暂无评论</span>
+                    </div>
                   </template>
                 </n-scrollbar>
               </n-list>
@@ -97,10 +102,14 @@
 import BaseLayout from "@/components/BaseLayout.vue";
 import {useRoute, useRouter} from "vue-router";
 import {onMounted, reactive, ref} from "vue";
-import {getPostDetail} from "@/utils/request.js";
+import {addPostComment, getPostDetail} from "@/utils/request.js";
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
+import {useMessage} from "naive-ui";
+import {userStore} from "@/stores/user.js";
 
+
+const message = useMessage();
 
 const commentList = ref(Array.from({length: 12}, () => ({
   username: "1",
@@ -111,12 +120,15 @@ const commentList = ref(Array.from({length: 12}, () => ({
 })));
 
 const commentForm = reactive({
+  postId: "",
   content: ""
 })
 
 const route = useRoute();
+const router = useRouter();
 
 const id = ref(route.params.id);
+const user = userStore();
 
 function getTimeString(time, time2) {
   if (time === time2) {
@@ -124,6 +136,38 @@ function getTimeString(time, time2) {
   } else {
     return "更新于 " + time2
   }
+}
+
+async function comment() {
+  if (commentForm.content.trim() === "") {
+    message.create("回复不能为空", {
+      type: "warning",
+      duration: 3000
+    });
+    return
+  }
+  let headers = {
+    'Content-Type': 'application/json',
+    'Token': user.userInfo.token
+  }
+  commentForm.postId = route.params.id
+  await addPostComment(commentForm, headers).then(res => {
+    if (res.data.code === 200) {
+      message.create("评论成功", {
+        type: "success",
+        duration: 3000
+      });
+      commentList.value = res.data.data
+      commentForm.content = ""
+    } else {
+      message.create(res.data.msg, {
+        type: "error",
+        duration: 3000
+      });
+    }
+
+  })
+
 }
 
 const post = ref({
@@ -153,7 +197,8 @@ onMounted(async () => {
     if (res.data.code !== 200) {
       router.push({path: '/'})
     } else {
-      post.value = res.data.data
+      post.value = res.data.data.post
+      commentList.value = res.data.data.comments
       getHighLighted()
     }
   })
