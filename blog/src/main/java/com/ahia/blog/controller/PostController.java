@@ -88,6 +88,7 @@ public class PostController {
         if (post.getTitle() == null || post.getContent() == null || post.getKind() == null || post.getTitle().isEmpty() || post.getContent().isEmpty()) {
             return R.error("标题、内容和类型不能为空");
         }
+        post.setUpdateTime(LocalDateTime.now());
         if (postService.updateById(post))
             return R.ok("修改成功");
         return R.error("修改失败");
@@ -127,6 +128,10 @@ public class PostController {
                 .innerJoin(USER).on(COMMENT.USER_ID.eq(USER.ID))
                 .where(COMMENT.POST_ID.eq(id));
 
+        UpdateChain.of(Post.class)
+                .set(POST.PAGE_VIEW, POST.PAGE_VIEW.add(1))
+                .where(POST.ID.eq(id))
+                .update();
         Map<String, Object> map = new HashMap<>();
         map.put("post", postService.getOne(queryWrapper));
         map.put("comments", commentService.list(queryWrapper1));
@@ -161,8 +166,10 @@ public class PostController {
                 .limit(10);
         Map<String, Object> map = new HashMap<>();
         map.put("posts", postService.list(queryWrapperPosts));
+        map.put("postNum",postService.count());
         map.put("comment",commentService.count());
-        map.put("lastPost",QueryChain.of(Post.class).select().from(POST).orderBy(Post::getUpdateTime).desc().limit(1).one());
+        map.put("lastPost",QueryChain.of(Post.class).select(POST.UPDATE_TIME).from(POST).orderBy(Post::getUpdateTime).desc().limit(1).one());
+        map.put("pageView",QueryChain.of(Post.class).select().from(POST).orderBy(Post::getPageView).desc().limit(5).list());
         return R.ok("获取成功", map);
     }
 

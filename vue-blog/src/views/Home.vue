@@ -44,15 +44,15 @@
                 <n-flex justify="space-around">
                   <n-flex vertical>
                     <n-text>文章数</n-text>
-                    <n-text>300</n-text>
+                    <n-text>{{homeShow.postNum}}</n-text>
                   </n-flex>
                   <n-flex vertical>
                     <n-text>更新时间</n-text>
-                    <n-text>2024-10-10</n-text>
+                    <n-text>{{formatDate(homeShow.updateTime)}}</n-text>
                   </n-flex>
                   <n-flex vertical>
                     <n-text>评论数</n-text>
-                    <n-text>300</n-text>
+                    <n-text>{{homeShow.commentNum}}</n-text>
                   </n-flex>
                 </n-flex>
               </n-card>
@@ -61,7 +61,7 @@
                 <n-list hoverable clickable>
                   <n-list-item class="home-top" :v-show="false">
                   </n-list-item>
-                  <template v-for="item in homeList.slice(0,5).reverse()">
+                  <template v-for="item in pageViewList">
                     <n-list-item class="home-top" @click="goDetail(item.id)">
                       <n-thing :title="item.title" content-style="margin-top: 10px;">
                         <div class="home-top-content" :style="{maxWidth:topMaxWidth}">
@@ -101,6 +101,23 @@ function extractTextFromHtml(html) {
   return doc.body.textContent || '';
 }
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+let pageViewList=ref([])
+
+
+const homeShow = reactive({
+  postNum:'0',
+  updateTime:'0',
+  commentNum:'0'
+})
+
 // let homeList = ref(Array.from({length: 10}, () => ({
 //   id: '1',
 //   title: "相见恨晚",
@@ -113,7 +130,11 @@ onBeforeMount(async () => {
   await getHomeList({pageSize: 10}).then(res => {
     console.log(res.data)
     if (res.data.code === 200){
-      homeList.value = res.data.data.records
+      homeList.value = res.data.data.posts
+      pageViewList.value=res.data.data.pageView
+      homeShow.commentNum= res.data.data.comment
+      homeShow.postNum=res.data.data.postNum
+      homeShow.updateTime=res.data.data.lastPost.updateTime
     }
     else {
       console.log(res.data.msg)

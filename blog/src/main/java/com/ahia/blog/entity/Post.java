@@ -6,6 +6,7 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -43,6 +44,8 @@ public class Post implements Serializable {
     private String title;
 
     private String content;
+
+    private Integer pageView;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

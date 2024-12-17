@@ -94,7 +94,7 @@ const updatePost = async (params, headers) => {
 
 const getHomeList = async (params) => {
     return http.request({
-        url: '/post/page',
+        url: '/post/getHome',
         method: 'GET',
         params: params
     })
