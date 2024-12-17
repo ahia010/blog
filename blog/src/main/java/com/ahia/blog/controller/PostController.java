@@ -139,6 +139,16 @@ public class PostController {
         return R.ok("获取成功", map);
     }
 
+    @GetMapping("getInfoAdmin/{id}")
+    public R getInfoAdmin(@PathVariable Serializable id) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(POST.ALL_COLUMNS, USER.USERNAME)
+                .from(POST)
+                .innerJoin(USER).on(POST.USER_ID.eq(USER.ID))
+                .where(POST.ID.eq(id));
+        return R.ok("获取成功", postService.getOne(queryWrapper));
+    }
+
     /**
      * 分页查询。
      *

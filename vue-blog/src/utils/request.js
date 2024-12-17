@@ -57,6 +57,13 @@ const getPostList = async (params) => {
         params: params
     })
 }
+const getPostListAdmin = async (params) => {
+    return http.request({
+        url: '/post/pageAdmin',
+        method: 'GET',
+        params: params
+    })
+}
 
 const getPostDetail = async (id) => {
     return http.request({
@@ -64,6 +71,12 @@ const getPostDetail = async (id) => {
         method: 'GET',
     })
 
+}
+const getPostDetailAdmin = async (id) => {
+    return http.request({
+        url: '/post/getInfoAdmin/' + id,
+        method: 'GET',
+    })
 }
 
 const getUserList = async (params, headers) => {
@@ -143,6 +156,8 @@ const addPostComment = async (params, headers) => {
 
 
 export {
+    getPostDetailAdmin,
+    getPostListAdmin,
     addPostComment,
     uploadListImg,
     updateUserInfo,
