@@ -250,9 +250,9 @@ onMounted(() => {
 async function getDetailById() {
   await getPostDetail(route.params.id).then(res => {
     if (res.data.code === 200) {
-      model.title = res.data.data.title
-      model.kind = res.data.data.kind
-      valueHtml.value = res.data.data.content
+      model.title = res.data.data.post.title
+      model.kind = res.data.data.post.kind
+      valueHtml.value = res.data.data.post.content
     } else {
       message.error(res.data.msg)
     }

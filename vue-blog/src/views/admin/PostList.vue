@@ -141,13 +141,18 @@ const columns = [
 const data = ref([]);
 const checkedRowKeysRef = ref([]);
 
-onBeforeMount(async () => {
+async function getList(){
+
   await getPostList().then(res => {
     if (res.data.code === 200)
       data.value = res.data.data.records;
     else
       message.error(res.data.msg)
   })
+}
+
+onBeforeMount(()=>{
+  getList()
 })
 
 function extractTextFromHtml(html) {

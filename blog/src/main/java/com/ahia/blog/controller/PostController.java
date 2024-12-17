@@ -24,6 +24,7 @@ import java.util.Map;
 import static com.ahia.blog.entity.table.CommentTableDef.COMMENT;
 import static com.ahia.blog.entity.table.PostTableDef.POST;
 import static com.ahia.blog.entity.table.UserTableDef.USER;
+import static com.mybatisflex.core.query.QueryMethods.number;
 import static com.mybatisflex.core.query.QueryMethods.select;
 
 
@@ -145,15 +146,39 @@ public class PostController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public R page(Page<Post> page, String search) {
-        if (search == null || search.isEmpty())
-            return R.ok("获取成功", postService.page(page));
-        QueryWrapper queryWrapper = QueryWrapper.create()
-                .where(POST.TITLE.like(search))
+    public R page(Page<Post> page, String search, String soft, Integer asc) {
+        QueryWrapper queryWrapper = QueryWrapper.create();
+        if (search != null && !search.isEmpty())
+                queryWrapper.where(POST.TITLE.like(search))
                 .or(POST.CONTENT.like(search))
                 .or(POST.KIND.like(search));
+        if (asc==null)
+            asc=1;
+        if (soft == null || soft.isEmpty())
+            soft = "";
+        switch (soft) {
+            case "pageView" -> queryWrapper.orderBy(POST.PAGE_VIEW, asc == 1);
+            case "updateTime" -> queryWrapper.orderBy(POST.UPDATE_TIME, asc == 1);
+            case "kind" -> queryWrapper.orderBy(POST.KIND, asc == 1);
+        }
         return R.ok("获取成功", postService.page(page, queryWrapper));
     }
+
+
+    @GetMapping("pageAdmin")
+    public R pageAdmin(Page<Post> page, String title,String content) {
+        QueryWrapper queryWrapper = QueryWrapper.create();
+        queryWrapper.where(number(1).eq(1));
+        if (title != null && !title.isEmpty())
+            queryWrapper.and(POST.TITLE.like(title));
+        if (content != null && !content.isEmpty())
+            queryWrapper.and(POST.CONTENT.like(content));
+        return R.ok("获取成功", postService.page(page, queryWrapper));
+
+    }
+
+
+
 
 
     @GetMapping("getHome")
@@ -166,10 +191,10 @@ public class PostController {
                 .limit(10);
         Map<String, Object> map = new HashMap<>();
         map.put("posts", postService.list(queryWrapperPosts));
-        map.put("postNum",postService.count());
-        map.put("comment",commentService.count());
-        map.put("lastPost",QueryChain.of(Post.class).select(POST.UPDATE_TIME).from(POST).orderBy(Post::getUpdateTime).desc().limit(1).one());
-        map.put("pageView",QueryChain.of(Post.class).select().from(POST).orderBy(Post::getPageView).desc().limit(5).list());
+        map.put("postNum", postService.count());
+        map.put("comment", commentService.count());
+        map.put("lastPost", QueryChain.of(Post.class).select(POST.UPDATE_TIME).from(POST).orderBy(Post::getUpdateTime).desc().limit(1).one());
+        map.put("pageView", QueryChain.of(Post.class).select().from(POST).orderBy(Post::getPageView).desc().limit(5).list());
         return R.ok("获取成功", map);
     }
 

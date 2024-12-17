@@ -4,8 +4,10 @@
       <n-layout content-style="padding:20px 10vw">
         <n-card>
           <n-space>
-            <n-button>排序方式</n-button>
-            <n-button>分类</n-button>
+<!--            <n-text>排序方式</n-text>-->
+            <n-button>类别排序</n-button>
+            <n-button>更新时间</n-button>
+            <n-button>浏览量</n-button>
           </n-space>
         </n-card>
         <n-card>
