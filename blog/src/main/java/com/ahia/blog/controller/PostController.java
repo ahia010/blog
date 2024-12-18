@@ -17,6 +17,7 @@ import com.ahia.blog.service.PostService;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +39,7 @@ public class PostController {
     @Autowired
     private CommentService commentService;
 
-    /**
-     * 添加。
-     *
-     * @param post
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
+
     @Authentication(role = {2})
     @PostMapping("save")
     public R save(@RequestHeader(name = "Token", defaultValue = "") String token, @RequestBody Post post) {
@@ -66,23 +62,16 @@ public class PostController {
         return R.ok("添加成功");
     }
 
-    /**
-     * 根据主键删除。
-     *
-     * @param id 主键
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
-    @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Serializable id) {
-        return postService.removeById(id);
+
+    @Authentication(role = {2})
+    @DeleteMapping("delete")
+    public R delete(Serializable[] ids) {
+        if (postService.removeByIds(Arrays.asList(ids)))
+            return R.ok("删除成功");
+        return R.error("删除失败");
     }
 
-    /**
-     * 根据主键更新。
-     *
-     * @param post
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
+
     @Authentication(role = {2})
     @PutMapping("update")
     public R update(@RequestBody Post post) {
@@ -100,17 +89,12 @@ public class PostController {
      *
      * @return 所有数据
      */
+    @Authentication(role = {2})
     @GetMapping("list")
     public List<Post> list() {
         return postService.list();
     }
 
-    /**
-     * 根据主键获取详细信息。
-     *
-     * @param id 主键
-     * @return 详情
-     */
     @GetMapping("getInfo/{id}")
     public R getInfo(@PathVariable Serializable id) {
         QueryWrapper queryWrapper = QueryWrapper.create()

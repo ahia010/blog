@@ -46,7 +46,7 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {useMessage} from "naive-ui";
 import {userStore} from "@/stores/user.js";
 import {useRouter, useRoute} from "vue-router";
-import {addPost, getPostDetail, updatePost, uploadListImg} from "@/utils/request.js";
+import {addPost, getPostDetailAdmin, updatePost, uploadListImg} from "@/utils/request.js";
 import axios from "axios";
 
 const router = useRouter();
@@ -248,7 +248,7 @@ onMounted(() => {
 })
 
 async function getDetailById() {
-  await getPostDetail(route.params.id).then(res => {
+  await getPostDetailAdmin(route.params.id).then(res => {
     if (res.data.code === 200) {
       model.title = res.data.data.post.title
       model.kind = res.data.data.post.kind

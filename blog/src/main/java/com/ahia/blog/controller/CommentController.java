@@ -32,12 +32,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    /**
-     * 添加。
-     *
-     * @param comment
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
+
     @Authentication(role = {1, 2})
     @PostMapping("save")
     public R save(@RequestBody Comment comment, @RequestHeader(name = "Token", defaultValue = "") String token) {
@@ -70,50 +65,32 @@ public class CommentController {
      */
     @Authentication(role = {1, 2})
     @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Serializable id) {
+    public boolean remove(@PathVariable Serializable id,@RequestHeader(name = "Token", defaultValue = "") String token) {
         return commentService.removeById(id);
     }
 
-    /**
-     * 根据主键更新。
-     *
-     * @param comment
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
+
+    @Authentication(role = {2})
     @PutMapping("update")
     public boolean update(@RequestBody Comment comment) {
         return commentService.updateById(comment);
     }
 
-    /**
-     * 查询所有。
-     *
-     * @return 所有数据
-     */
+
     @Authentication(role = {1})
     @GetMapping("list")
     public List<Comment> list() {
         return commentService.list();
     }
 
-    /**
-     * 根据主键获取详细信息。
-     *
-     * @param id 主键
-     * @return 详情
-     */
+
     @Authentication(role = {2})
     @GetMapping("getInfo/{id}")
     public Comment getInfo(@PathVariable Serializable id) {
         return commentService.getById(id);
     }
 
-    /**
-     * 分页查询。
-     *
-     * @param page 分页对象
-     * @return 分页对象
-     */
+
     @Authentication(role = {2})
     @GetMapping("page")
     public Page<Comment> page(Page<Comment> page) {

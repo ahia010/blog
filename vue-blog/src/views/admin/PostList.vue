@@ -41,7 +41,7 @@
 import {h, onBeforeMount, reactive, ref} from 'vue'
 import {NButton, NEllipsis, useMessage} from "naive-ui";
 import {useRouter} from "vue-router";
-import {getPostList} from "@/utils/request.js";
+import {getPostList, getPostListAdmin} from "@/utils/request.js";
 
 const router = useRouter();
 
@@ -143,7 +143,7 @@ const checkedRowKeysRef = ref([]);
 
 async function getList(){
 
-  await getPostList().then(res => {
+  await getPostListAdmin().then(res => {
     if (res.data.code === 200)
       data.value = res.data.data.records;
     else
@@ -175,5 +175,4 @@ function handleValidateClick(e) {
 
 </script>
 <style scoped lang="scss">
-
 </style>
