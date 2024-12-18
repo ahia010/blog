@@ -68,9 +68,8 @@ public class UserController {
     @Authentication(role = {1,2})
     @PostMapping("update")
     public R update(User user) {
-        System.out.println(user);
         if (TokenUtil.extractUsername(user.getToken()).equals(user.getUsername())) {
-            if (user.getPassword() != null && user.getNewPassword() != null) {
+            if (user.getPassword() != null && user.getNewPassword() != null&&!user.getPassword().isEmpty()&&!user.getNewPassword().isEmpty()) {
                 User user1 = userService.getOne(QueryWrapper.create().eq("username", user.getUsername()));
                 if (user1 == null || !PasswordUtil.verifyPassword(user.getPassword(), user1.getPassword())) {
                     return R.error(401, "密码错误");
@@ -78,6 +77,7 @@ public class UserController {
                 UpdateChain.of(User.class)
                         .set("password", PasswordUtil.hashPassword(user.getNewPassword()))
                         .set("updateTime", LocalDateTime.now())
+                        .where(User::getUsername).eq(user.getUsername())
                         .update();
                 return R.ok("修改成功");
             }
@@ -85,7 +85,7 @@ public class UserController {
                 UpdateChain.of(User.class)
                         .set("avatar", saveAvatar(user.getFile()))
                         .set("updateTime", LocalDateTime.now())
-                        .where("username", user.getUsername())
+                        .where(USER.USERNAME.eq(user.getUsername()))
                         .update();
                 return R.ok("修改成功");
             }
@@ -223,9 +223,9 @@ public class UserController {
             String originalFilename = files.getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
             String newFilename = UUID.randomUUID() + extension;
-            Path path = Paths.get("./upload/avatar/" + newFilename);
+            Path path = Paths.get("./uploads/avatar/" + newFilename);
             Files.write(path, bytes);
-            return "api/avatar/" + newFilename;
+            return "/api/avatar/" + newFilename;
         } catch (IOException e) {
             e.printStackTrace();
         }

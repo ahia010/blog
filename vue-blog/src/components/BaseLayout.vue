@@ -27,12 +27,12 @@
       </div>
       <div class="nav-right" v-else>
         <n-dropdown trigger="hover" :options="options"  @select="handleSelect">
-          <n-image :src="avatar" preview-disabled  width="50" height="50" object-fit="cover"></n-image>
+          <n-image :src="user.getUserInfo().avatar==null?'api/avatar/default.jpg':user.getUserInfo().avatar" preview-disabled  width="50" height="50" object-fit="cover"></n-image>
         </n-dropdown>
       </div>
     </n-layout-header>
     <n-layout-content class="aaa">
-      <slot name="default"/>
+      <slot name="default" @avatarUpdate="handleAvatarUpdate" />
     </n-layout-content>
     <BaseFooter/>
   </n-layout>
@@ -47,6 +47,10 @@ import {userStore} from "@/stores/user.js";
 import {useMessage} from "naive-ui";
 import {MdSearch} from "@vicons/ionicons4";
 
+function handleAvatarUpdate(newAvatar) {
+  console.log("xxxxxxxxx")
+  avatar.value = newAvatar;
+}
 
 const search = ref("")
 function goList() {
@@ -107,7 +111,7 @@ onMounted(() => {
 const userInfo = user.getUserInfo()
 
 
-const avatar = userInfo.avatar ? userInfo.avatar : "api/avatar/default.jpg"
+const avatar = ref(user.getUserInfo().avatar || "api/avatar/default.jpg");
 
 
 function handleSelect(key) {

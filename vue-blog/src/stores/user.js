@@ -10,6 +10,9 @@ export const userStore = defineStore('user', () => {
         userInfo.role = role;
         userInfo.avatar = avatar;
     }
+    const serUserAvatar = (e) => {
+        userInfo.avatar=e
+    }
     const getUserInfo = () => {
         return userInfo;
     }
@@ -23,6 +26,7 @@ export const userStore = defineStore('user', () => {
 
 
     return {
+        serUserAvatar,
         getUserInfo,
         userInfo,
         setUserInfo,
