@@ -17,14 +17,14 @@
       </n-button>
     </n-form-item>
     <n-form-item>
-      <n-button attr-type="button" @click="handleValidateClick">
+      <n-button attr-type="button" @click="resetForm">
         重置
       </n-button>
     </n-form-item>
   </n-form>
   <n-space style="margin-bottom: 10px">
     <n-button @click="router.push({name:'postAdd'})">新增</n-button>
-    <n-button>删除</n-button>
+    <n-button @click="delPost(null)">删除</n-button>
   </n-space>
   <n-space vertical :size="12">
     <n-data-table
@@ -41,10 +41,11 @@
 import {h, onBeforeMount, reactive, ref} from 'vue'
 import {NButton, NEllipsis, useMessage} from "naive-ui";
 import {useRouter} from "vue-router";
-import {getPostList, getPostListAdmin} from "@/utils/request.js";
+import {deletePostRequest, deleteUserRequest, getPostList, getPostListAdmin} from "@/utils/request.js";
+import {userStore} from "@/stores/user.js";
 
 const router = useRouter();
-
+const user=userStore();
 
 const rowKey = (row) => row.id;
 
@@ -141,9 +142,9 @@ const columns = [
 const data = ref([]);
 const checkedRowKeysRef = ref([]);
 
-async function getList(){
+async function getList() {
 
-  await getPostListAdmin().then(res => {
+  await getPostListAdmin(formValue).then(res => {
     if (res.data.code === 200)
       data.value = res.data.data.records;
     else
@@ -151,7 +152,7 @@ async function getList(){
   })
 }
 
-onBeforeMount(()=>{
+onBeforeMount(() => {
   getList()
 })
 
@@ -163,15 +164,45 @@ function extractTextFromHtml(html) {
 
 const formRef = ref(null);
 const message = useMessage();
-const formValue = ref({
+const formValue = reactive({
   title: "",
   content: "",
 });
 
-
-function handleValidateClick(e) {
-
+function resetForm() {
+  formValue.title=formValue.content=''
+  getList()
 }
+
+function handleValidateClick() {
+  getList()
+}
+
+async function delPost(param) {
+  const ids = new URLSearchParams();
+  if (param == null) {
+    if (checkedRowKeysRef.value.length === 0) {
+      message.error('请选择要删除的数据')
+      return
+    }
+    checkedRowKeysRef.value.forEach(e => {
+      ids.append('ids', e)
+    })
+  } else
+    ids.append('ids', param)
+  await deletePostRequest(ids, {
+    'Token': user.getUserInfo().token,
+    'Content-Type': 'application/json'
+  }).then(res => {
+    if (res.data.code === 200) {
+      message.success('删除成功')
+      getList()
+    } else {
+      message.error(res.data.msg);
+    }
+  })
+}
+
 
 </script>
 <style scoped lang="scss">

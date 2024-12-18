@@ -49,6 +49,15 @@ const deleteUserRequest = async (ids, headers) => {
         headers: headers
     })
 }
+const deletePostRequest = async (ids, headers) => {
+    return http.request({
+        url: '/post/delete',
+        method: 'DELETE',
+        params: ids,
+        headers: headers
+    })
+}
+
 
 const getPostList = async (params) => {
     return http.request({
@@ -165,6 +174,7 @@ export {
     updatePost,
     login,
     deleteUserRequest,
+    deletePostRequest,
     saveUserRequest,
     register,
     getPostList,
