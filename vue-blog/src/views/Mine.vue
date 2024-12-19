@@ -140,6 +140,10 @@ let updatePasswordFromValue = reactive({
 })
 
 async function updatePassword() {
+  if (updatePasswordFromValue.password === '' || updatePasswordFromValue.newPassword === '' || updatePasswordFromValue.confirmPassword === '') {
+    message.error("密码不能为空")
+    return
+  }
   if (updatePasswordFromValue.newPassword !== updatePasswordFromValue.confirmPassword) {
     message.error("两次密码不一致")
     return
