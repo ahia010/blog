@@ -139,6 +139,13 @@ function getTimeString(time, time2) {
 }
 
 async function comment() {
+  if (!user.getUserInfo().token) {
+    message.create("请先登录", {
+      type: "warning",
+      duration: 3000
+    });
+    return
+  }
   if (commentForm.content.trim() === "") {
     message.create("回复不能为空", {
       type: "warning",
