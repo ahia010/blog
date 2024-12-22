@@ -65,7 +65,7 @@ public class PostController {
 
     @Authentication(role = {2})
     @DeleteMapping("delete")
-    public R delete(Serializable[] ids) {
+    public R delete(Integer[] ids) {
         if (postService.removeByIds(Arrays.asList(ids)))
             return R.ok("删除成功");
         return R.error("删除失败");
@@ -161,7 +161,7 @@ public class PostController {
 
     @GetMapping("pageAdmin")
     public R pageAdmin(Page<Post> page, String title,String content) {
-        page.setPageNumber(100);
+        page.setPageSize(100);
         QueryWrapper queryWrapper = QueryWrapper.create();
         queryWrapper.where(number(1).eq(1));
         if (title != null && !title.isEmpty())

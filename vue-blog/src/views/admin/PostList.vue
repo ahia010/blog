@@ -113,6 +113,9 @@ const columns = [
             type: 'error',
             style: {
               marginLeft: '10px'
+            },
+            onClick:()=>{
+              delPost(row.id)
             }
           }, {
             default: () => '删除'
