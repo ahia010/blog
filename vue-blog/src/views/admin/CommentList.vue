@@ -40,10 +40,17 @@
 <script setup>
 import {h, onBeforeMount, reactive, ref} from 'vue'
 import {NButton, NEllipsis, useMessage} from "naive-ui";
-import {useRouter} from "vue-router";
-import {deletePostRequest, deleteUserRequest, getPostList, getPostListAdmin} from "@/utils/request.js";
+import {useRoute, useRouter} from "vue-router";
+import {
+  deletePostRequest,
+  deleteUserRequest,
+  getCommentListAdmin,
+  getPostList,
+  getPostListAdmin
+} from "@/utils/request.js";
 import {userStore} from "@/stores/user.js";
 
+const route = useRoute();
 const router = useRouter();
 const user = userStore();
 
@@ -72,10 +79,7 @@ const columns = [
   {
     title: '内容',
     key: 'content',
-    ellipsis: true,
-    render(row) {
-      return h(NEllipsis, {tooltip: false}, {default: () => extractTextFromHtml(row.content)})
-    }
+    ellipsis: true
   },
   {
     title: '创建时间',
@@ -85,25 +89,18 @@ const columns = [
       multiple: 1
     }
   }, {
-    title: '更新时间',
-    key: 'updateTime',
-    sorter: {
-      compare: (a, b) => a.updateTime - b.updateTime,
-      multiple: 2
-    }
-  }, {
     title: '操作',
     key: 'operation',
     render(row) {
-      const edit = h(NButton, {
-        type: 'primary',
-        onClick: () => {
-          router.push({name: 'postDetail', params: {id: row.id}})
-        }
-      }, {
-        default: () => '编辑'
-
-      })
+      // const edit = h(NButton, {
+      //   type: 'primary',
+      //   onClick: () => {
+      //     router.push({name: 'postDetail', params: {id: row.id}})
+      //   }
+      // }, {
+      //   default: () => '编辑'
+      //
+      // })
       const del = h(
           NButton, {
             type: 'error',
@@ -113,16 +110,7 @@ const columns = [
           }, {
             default: () => '删除'
           })
-      const viewComment = h(
-          NButton, {
-            type: 'info',
-            style: {
-              marginLeft: '10px'
-            }
-          }, {
-            default: () => '查看评论'
-          })
-      return [edit, del, viewComment]
+      return [del]
     }
   }
 ]
@@ -132,8 +120,12 @@ const data = ref([]);
 const checkedRowKeysRef = ref([]);
 
 async function getList() {
-
-  await getPostListAdmin(formValue).then(res => {
+  const headers = {
+    'Token': user.getUserInfo().token,
+    'Content-Type': 'application/json'
+  }
+  formValue.id = route.params.id
+  await getCommentListAdmin(formValue, headers).then(res => {
     if (res.data.code === 200)
       data.value = res.data.data.records;
     else

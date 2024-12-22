@@ -87,6 +87,14 @@ const getPostDetailAdmin = async (id) => {
         method: 'GET',
     })
 }
+const getCommentListAdmin = async (params,headers) => {
+    return http.request({
+        url: '/comment/page',
+        method: 'GET',
+        params: params,
+        headers: headers
+    })
+}
 
 const getUserList = async (params, headers) => {
     return http.request({
@@ -163,8 +171,18 @@ const addPostComment = async (params, headers) => {
     })
 }
 
+const getRole = async (headers)=>{
+    return http.request({
+        url: '/user/getRole',
+        method: 'GET',
+        headers: headers
+    })
+}
+
 
 export {
+    getRole,
+    getCommentListAdmin,
     getPostDetailAdmin,
     getPostListAdmin,
     addPostComment,

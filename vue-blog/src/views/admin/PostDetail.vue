@@ -186,6 +186,7 @@ async function submit() {
     await addPost(model, headers).then(res => {
       if (res.data.code === 200) {
         message.success('新增成功')
+        router.go(-1)
       } else if (res.data.code === 401) {
         message.error('登录过期，请重新登录')
         router.push('/login')

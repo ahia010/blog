@@ -36,7 +36,7 @@ import {useRouter, useRoute, RouterLink} from "vue-router";
 import {h, onMounted, ref} from "vue";
 import {userStore} from "@/stores/user.js";
 import {useMessage} from "naive-ui";
-import {getUserName} from "@/utils/request.js";
+import {getRole, getUserName} from "@/utils/request.js";
 
 const message = useMessage();
 
@@ -82,7 +82,17 @@ async function getUser() {
       console.log(err)
       router.push({name: "login"})
     })
+  await getRole(headers).then(res => {
+    console.log(res.data)
+    if (res.data.code === 200) {
+      if (res.data.data !== 2) {
+        router.push({name: "login"})
+      }
+    }
+  })
 }
+
+
 
 onMounted(() => {
   options.value[0].label = "你好:" + userInfo.username

@@ -122,6 +122,9 @@ const columns = [
             type: 'info',
             style: {
               marginLeft: '10px'
+            },
+            onClick:()=>{
+              router.push({name:'comment', params: {id: row.id}})
             }
           }, {
             default: () => '查看评论'

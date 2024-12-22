@@ -10,6 +10,7 @@ import Admin from "@/views/admin/Admin.vue";
 import PostList from "@/views/admin/PostList.vue";
 import PostDetail from "@/views/admin/PostDetail.vue";
 import CommentList from "@/views/admin/CommentList.vue";
+import {userStore} from "@/stores/user.js";
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -76,5 +77,16 @@ const router = createRouter({
         }
     ]
 })
+
+// router.beforeEach((to, from, next) => {
+//     const userInfo = userStore().getUserInfo();
+//
+//     if (to.name==='mine'&&userInfo.token===''){
+//         return next({name:'login'})
+//     }else if (to.path.startsWith('/admin')&&userInfo.role!==2){
+//         return next({name:'login'})
+//     }
+//     next()
+// });
 
 export default router
