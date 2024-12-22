@@ -161,6 +161,7 @@ public class PostController {
 
     @GetMapping("pageAdmin")
     public R pageAdmin(Page<Post> page, String title,String content) {
+        page.setPageNumber(100);
         QueryWrapper queryWrapper = QueryWrapper.create();
         queryWrapper.where(number(1).eq(1));
         if (title != null && !title.isEmpty())

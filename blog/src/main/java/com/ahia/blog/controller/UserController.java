@@ -241,6 +241,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("getRole")
+    public R getRole(@RequestHeader String token){
+        try {
+            return R.ok("获取成功", TokenUtil.extractRole(token));
+        } catch (Exception e) {
+            return R.error(401, "登录过期");
+        }
+    }
+
     @GetMapping("getUserInfo")
     public R getUserInfo(@RequestHeader(name = "Token", defaultValue = "") String token) {
         try {

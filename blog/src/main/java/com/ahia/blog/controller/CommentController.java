@@ -93,8 +93,20 @@ public class CommentController {
 
     @Authentication(role = {2})
     @GetMapping("page")
-    public Page<Comment> page(Page<Comment> page) {
-        return commentService.page(page);
+    public R page(Page<Comment> page,Integer id,String username,String content) {
+        QueryWrapper queryWrapper = new QueryWrapper()
+                .select(COMMENT.ALL_COLUMNS, USER.USERNAME)
+                .innerJoin(USER).on(COMMENT.USER_ID.eq(USER.ID));;
+        if (id != null) {
+            queryWrapper.eq(Comment::getPostId, id);
+        }
+        if (username != null&& !username.isEmpty()) {
+            queryWrapper.like(Comment::getUsername, username);
+        }
+        if (content != null&& !content.isEmpty()) {
+            queryWrapper.like(Comment::getContent, content);
+        }
+        return R.ok("获取成功", commentService.page(page,queryWrapper));
     }
 
 }
