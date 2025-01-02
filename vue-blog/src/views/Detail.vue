@@ -111,13 +111,14 @@ import {userStore} from "@/stores/user.js";
 
 const message = useMessage();
 
-const commentList = ref(Array.from({length: 12}, () => ({
-  username: "1",
-  time: "2024-06-23 18:49:49",
-  content: "我觉得这个文章还有很多不完善的地方，比如这里的这个和那里的那个，有明显的错误",
-  avatar: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-
-})));
+// const commentList = ref(Array.from({length: 12}, () => ({
+//   username: "1",
+//   time: "2024-06-23 18:49:49",
+//   content: "我觉得这个文章还有很多不完善的地方，比如这里的这个和那里的那个，有明显的错误",
+//   avatar: "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+//
+// })));
+const commentList = ref([]);
 
 const commentForm = reactive({
   postId: "",
@@ -216,7 +217,7 @@ onMounted(async () => {
 function getHighLighted() {
   highlightedContent.value = post.value.content.replace(/<pre><code class="(.*?)">([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
     const highlightedCode = hljs.highlightAuto(code).value;
-    return `<pre><code class="hljs" style="width: fit-content">${highlightedCode}</code></pre>`;
+    return `<pre><code class="hljs" style="width: 98%">${highlightedCode}</code></pre>`;
     // console.log(lang, code)
     // return `<pre><code class="hljs ${lang}"></code></pre>`;
   });
